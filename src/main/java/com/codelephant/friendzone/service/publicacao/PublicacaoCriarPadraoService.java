@@ -1,6 +1,7 @@
 package com.codelephant.friendzone.service.publicacao;
 
 import com.codelephant.friendzone.dto.publicacao.PublicacaoPostPutRequestDTO;
+import com.codelephant.friendzone.exception.usuario.CodigoDeAcessoDiferenteException;
 import com.codelephant.friendzone.exception.usuario.UsuarioNaoExisteException;
 import com.codelephant.friendzone.model.Publicacao;
 import com.codelephant.friendzone.model.Usuario;
@@ -25,9 +26,12 @@ public class PublicacaoCriarPadraoService implements PublicacaoCriarService {
 
     @Override
     public void salvar(PublicacaoPostPutRequestDTO publicacaoPostPutRequestDTO, Long idUsuario) {
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
+        if (!publicacaoPostPutRequestDTO.getCodigoAcesso().equals(usuario.getCodigoAcesso())) {
+            throw new CodigoDeAcessoDiferenteException();
+        }
         Publicacao publicacao = modelMapper.map(publicacaoPostPutRequestDTO, Publicacao.class);
         publicacao.setComentarios(new ArrayList<>());
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
         usuario.getPublicacoes().add(publicacao);
         usuarioRepository.save(usuario);
     }

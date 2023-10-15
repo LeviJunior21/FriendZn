@@ -29,6 +29,10 @@ public class Usuario {
     @Column(nullable = false)
     private String email;
 
+    @JsonProperty("codigoAcesso")
+    @Column(nullable = false)
+    private Integer codigoAcesso;
+
     @JsonProperty("publicacoes")
     @OneToMany(cascade = CascadeType.ALL)
     private List<Publicacao> publicacoes;

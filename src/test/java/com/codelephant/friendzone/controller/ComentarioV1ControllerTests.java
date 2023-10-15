@@ -63,6 +63,7 @@ public class ComentarioV1ControllerTests {
             Usuario usuarioTemp = Usuario.builder()
                     .apelido("Levi")
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
+                    .codigoAcesso(123456)
                     .publicacoes(new ArrayList<>())
                     .build();
 
@@ -77,6 +78,7 @@ public class ComentarioV1ControllerTests {
 
             comentarioPostPutRequestDTO = ComentarioPostPutRequestDTO.builder()
                     .comentario("Oi")
+                    .codigoAcesso(123456)
                     .build();
         }
 

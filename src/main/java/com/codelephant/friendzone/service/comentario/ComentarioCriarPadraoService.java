@@ -2,6 +2,7 @@ package com.codelephant.friendzone.service.comentario;
 
 import com.codelephant.friendzone.dto.comentario.ComentarioPostPutRequestDTO;
 import com.codelephant.friendzone.exception.publicacao.PublicacaoNaoExisteException;
+import com.codelephant.friendzone.exception.usuario.CodigoDeAcessoDiferenteException;
 import com.codelephant.friendzone.exception.usuario.UsuarioNaoExisteException;
 import com.codelephant.friendzone.model.Comentario;
 import com.codelephant.friendzone.model.Publicacao;
@@ -25,6 +26,9 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
     @Override
     public void salvar(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO, Long idPublicacao, Long idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
+        if (!comentarioPostPutRequestDTO.getCodigoAcesso().equals(usuario.getCodigoAcesso())) {
+            throw new CodigoDeAcessoDiferenteException();
+        }
         Comentario comentario = modelMapper.map(comentarioPostPutRequestDTO, Comentario.class);
         comentario.setUsuario(usuario);
         Publicacao publicacao = publicacaoRepository.findById(idPublicacao).orElseThrow(PublicacaoNaoExisteException::new);

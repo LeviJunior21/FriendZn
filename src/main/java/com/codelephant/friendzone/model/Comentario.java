@@ -25,4 +25,8 @@ public class Comentario {
     @JsonProperty("usuario")
     @ManyToOne(optional = false)
     private Usuario usuario;
+
+    @JsonProperty("codigoAcesso")
+    @Column(nullable = false)
+    private Integer codigoAcesso;
 }

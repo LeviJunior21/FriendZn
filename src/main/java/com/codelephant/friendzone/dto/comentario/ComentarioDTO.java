@@ -17,5 +17,4 @@ public class ComentarioDTO {
 
     @JsonProperty("comentario")
     private String comentario;
-
 }

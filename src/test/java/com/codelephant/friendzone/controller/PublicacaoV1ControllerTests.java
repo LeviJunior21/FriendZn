@@ -52,12 +52,14 @@ public class PublicacaoV1ControllerTests {
             objectMapper.registerModule(new JavaTimeModule());
             publicacaoPostPutRequestDTO = PublicacaoPostPutRequestDTO.builder()
                     .publicacao("Ola!")
+                    .codigoAcesso(123456)
                     .date(new Date())
                     .build();
 
             Usuario usuarioTemp = Usuario.builder()
                     .apelido("Levi")
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
+                    .codigoAcesso(123456)
                     .publicacoes(new ArrayList<>())
                     .build();
 

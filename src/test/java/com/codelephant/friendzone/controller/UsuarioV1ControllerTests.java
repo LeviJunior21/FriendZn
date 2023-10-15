@@ -28,7 +28,6 @@ public class UsuarioV1ControllerTests {
 
     @Autowired
     MockMvc driver;
-
     @Autowired
     UsuarioRepository usuarioRepository;
     @Autowired
@@ -50,6 +49,7 @@ public class UsuarioV1ControllerTests {
             usuarioPostPutRequestDTO = UsuarioPostPutRequestDTO.builder()
                     .apelido("Levi")
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
+                    .codigoAcesso(123456)
                     .build();
         }
 
