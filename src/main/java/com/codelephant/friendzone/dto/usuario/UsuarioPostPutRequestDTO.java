@@ -1,6 +1,7 @@
 package com.codelephant.friendzone.dto.usuario;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,4 +19,8 @@ public class UsuarioPostPutRequestDTO {
     @JsonProperty("apelido")
     @NotBlank(message = "Apelido invalido.")
     private String apelido;
+
+    @JsonProperty("email")
+    @Column(nullable = false)
+    private String email;
 }

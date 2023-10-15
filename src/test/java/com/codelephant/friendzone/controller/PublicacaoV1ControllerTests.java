@@ -26,7 +26,7 @@ import java.util.Date;
 @AutoConfigureMockMvc
 @Transactional
 @DisplayName("Casos de testes para publicação.")
-public class APublicacaoV1ControllerTests {
+public class PublicacaoV1ControllerTests {
 
     @Autowired
     MockMvc driver;
@@ -57,6 +57,7 @@ public class APublicacaoV1ControllerTests {
 
             Usuario usuarioTemp = Usuario.builder()
                     .apelido("Levi")
+                    .email("levi.pereira.junior@ccc.ufcg.edu.br")
                     .publicacoes(new ArrayList<>())
                     .build();
 
@@ -89,7 +90,6 @@ public class APublicacaoV1ControllerTests {
             assertEquals("Ola!", usuarioRepository.findById(usuario.getId()).get().getPublicacoes().stream().findFirst().get().getPublicacao());
             assertEquals(1, publicacaoRepository.findAll().size());
             assertEquals("Ola!", publicacaoRepository.findAll().stream().findFirst().get().getPublicacao());
-            assertEquals(1, publicacaoRepository.findAll().stream().findFirst().get().getId());
         }
 
         @Test

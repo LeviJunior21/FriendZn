@@ -62,6 +62,7 @@ public class ComentarioV1ControllerTests {
 
             Usuario usuarioTemp = Usuario.builder()
                     .apelido("Levi")
+                    .email("levi.pereira.junior@ccc.ufcg.edu.br")
                     .publicacoes(new ArrayList<>())
                     .build();
 
@@ -82,6 +83,7 @@ public class ComentarioV1ControllerTests {
         @AfterEach
         void tearDown() {
             usuarioRepository.deleteAll();
+            publicacaoRepository.deleteAll();
         }
 
         @Test

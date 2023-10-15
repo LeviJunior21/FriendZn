@@ -49,6 +49,7 @@ public class UsuarioV1ControllerTests {
             objectMapper.registerModule(new JavaTimeModule());
             usuarioPostPutRequestDTO = UsuarioPostPutRequestDTO.builder()
                     .apelido("Levi")
+                    .email("levi.pereira.junior@ccc.ufcg.edu.br")
                     .build();
         }
 
@@ -71,7 +72,8 @@ public class UsuarioV1ControllerTests {
             UsuarioDTO usuarioDTO = objectMapper.readValue(responseJSONString, UsuarioDTO.class);
 
             assertAll(
-                    () -> assertEquals(usuarioPostPutRequestDTO.getApelido(), usuarioDTO.getApelido())
+                    () -> assertEquals(usuarioPostPutRequestDTO.getApelido(), usuarioDTO.getApelido()),
+                    () -> assertEquals(usuarioPostPutRequestDTO.getEmail(), usuarioRepository.findAll().stream().findFirst().get().getEmail())
             );
         }
     }
