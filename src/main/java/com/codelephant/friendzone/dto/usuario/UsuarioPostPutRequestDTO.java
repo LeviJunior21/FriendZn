@@ -15,15 +15,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioPostPutRequestDTO {
-    @JsonProperty("id")
-    private Long id;
-
     @JsonProperty("apelido")
     @NotBlank(message = "Apelido invalido.")
     private String apelido;
 
     @JsonProperty("email")
-    @NotBlank(message = "Email inválido.")
+    @NotBlank(message = "Email invalido.")
     private String email;
 
     @JsonProperty("codigoAcesso")

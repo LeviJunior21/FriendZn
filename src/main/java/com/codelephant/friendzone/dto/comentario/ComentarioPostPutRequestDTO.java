@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComentarioPostPutRequestDTO {
-    @JsonProperty("id")
-    private Long id;
-
     @JsonProperty("comentario")
     @NotBlank(message = "Comentario invalido.")
     private String comentario;

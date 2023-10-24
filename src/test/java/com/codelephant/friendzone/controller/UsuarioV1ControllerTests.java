@@ -2,6 +2,7 @@ package com.codelephant.friendzone.controller;
 
 import com.codelephant.friendzone.dto.usuario.UsuarioDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
+import com.codelephant.friendzone.exception.CustomErrorType;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,8 +61,12 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando salvamos um usuário.")
+        @DisplayName("Quando salvamos um usuário com sucesso.")
         void quandoSalvamosUmUsuario() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
             String responseJSONString = driver.perform(post(URI_USUARIOS)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(usuarioPostPutRequestDTO)))
@@ -71,10 +76,95 @@ public class UsuarioV1ControllerTests {
 
             UsuarioDTO usuarioDTO = objectMapper.readValue(responseJSONString, UsuarioDTO.class);
 
+            // Assert
             assertAll(
                     () -> assertEquals(usuarioPostPutRequestDTO.getApelido(), usuarioDTO.getApelido()),
                     () -> assertEquals(usuarioPostPutRequestDTO.getEmail(), usuarioRepository.findAll().stream().findFirst().get().getEmail())
             );
+        }
+
+        @Test
+        @DisplayName("Quando tentamos salvar um usuário com nome vazio.")
+        void quandoSalvamosUmUsuarioComNomeVazio() throws Exception {
+            // Arrange
+            usuarioPostPutRequestDTO.setApelido("");
+
+            // Act
+            String responseJSONString = driver.perform(post(URI_USUARIOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(usuarioPostPutRequestDTO)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+
+            // Assert
+            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
+            assertEquals("Apelido invalido.", customErrorType.getErrors().get(0));
+        }
+
+        @Test
+        @DisplayName("Quando tentamos salvar um usuário com nome null.")
+        void quandoSalvamosUmUsuarioComNomeNull() throws Exception {
+            // Arrange
+            usuarioPostPutRequestDTO.setApelido(null);
+
+            // Act
+            String responseJSONString = driver.perform(post(URI_USUARIOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(usuarioPostPutRequestDTO)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+
+            // Assert
+            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
+            assertEquals("Apelido invalido.", customErrorType.getErrors().get(0));
+        }
+
+        @Test
+        @DisplayName("Quando tentamos salvar um usuário com email vazio.")
+        void quandoSalvamosUmUsuarioComEmailVazio() throws Exception {
+            // Arrange
+            usuarioPostPutRequestDTO.setEmail("");
+
+            // Act
+            String responseJSONString = driver.perform(post(URI_USUARIOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(usuarioPostPutRequestDTO)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+
+            // Assert
+            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
+            assertEquals("Email invalido.", customErrorType.getErrors().get(0));
+        }
+
+        @Test
+        @DisplayName("Quando tentamos salvar um usuário com email null.")
+        void quandoSalvamosUmUsuarioComEmailNull() throws Exception {
+            // Arrange
+            usuarioPostPutRequestDTO.setEmail(null);
+
+            // Act
+            String responseJSONString = driver.perform(post(URI_USUARIOS)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(usuarioPostPutRequestDTO)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+
+            // Assert
+            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
+            assertEquals("Email invalido.", customErrorType.getErrors().get(0));
         }
     }
 }

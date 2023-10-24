@@ -1,5 +1,6 @@
 package com.codelephant.friendzone.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,5 +36,6 @@ public class Usuario {
 
     @JsonProperty("publicacoes")
     @OneToMany(cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Publicacao> publicacoes;
 }

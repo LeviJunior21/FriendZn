@@ -2,8 +2,6 @@ package com.codelephant.friendzone.dto.usuario;
 
 import com.codelephant.friendzone.model.Publicacao;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +21,5 @@ public class UsuarioDTO {
     private String apelido;
 
     @JsonProperty("publicacoes")
-    @OneToMany(cascade = CascadeType.ALL)
     private List<Publicacao> publicacoes;
 }

@@ -23,9 +23,8 @@ public class PublicacaoV1Controller {
             @RequestBody @Valid PublicacaoPostPutRequestDTO publicacaoPostPutRequestDTO,
             @RequestParam Long id
     ) {
-        publicacaoCriarService.salvar(publicacaoPostPutRequestDTO, id);
         return ResponseEntity
-                .status(HttpStatus.NO_CONTENT)
-                .body("");
+                .status(HttpStatus.CREATED)
+                .body(publicacaoCriarService.salvar(publicacaoPostPutRequestDTO, id));
     }
 }

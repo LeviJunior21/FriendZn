@@ -1,11 +1,14 @@
 package com.codelephant.friendzone.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -20,6 +23,7 @@ public class Comentario {
     private Long id;
 
     @JsonProperty("comentario")
+    @Column(nullable = false)
     private String comentario;
 
     @JsonProperty("usuario")
@@ -29,4 +33,9 @@ public class Comentario {
     @JsonProperty("codigoAcesso")
     @Column(nullable = false)
     private Integer codigoAcesso;
+
+    @JsonProperty("publicacao")
+    @ManyToOne(optional = false)
+    @JsonBackReference
+    private Publicacao publicacao;
 }

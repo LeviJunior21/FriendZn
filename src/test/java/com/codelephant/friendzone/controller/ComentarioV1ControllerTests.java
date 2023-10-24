@@ -2,6 +2,7 @@ package com.codelephant.friendzone.controller;
 
 import com.codelephant.friendzone.dto.comentario.ComentarioPostPutRequestDTO;
 import com.codelephant.friendzone.dto.publicacao.PublicacaoPostPutRequestDTO;
+import com.codelephant.friendzone.exception.CustomErrorType;
 import com.codelephant.friendzone.model.Publicacao;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
@@ -70,6 +71,7 @@ public class ComentarioV1ControllerTests {
             Publicacao publicacao = Publicacao.builder()
                     .publicacao("Ola!")
                     .comentarios(new ArrayList<>())
+                    .usuario(usuarioTemp)
                     .date(new Date())
                     .build();
             usuarioTemp.getPublicacoes().add(publicacao);
@@ -90,7 +92,7 @@ public class ComentarioV1ControllerTests {
 
         @Test
         @DisplayName("quando comentamos numa publicação existente de um usuário")
-        void  quandoComentamosNumaPublicacaoExistenteDeUmUsuario() throws Exception {
+        void quandoComentamosNumaPublicacaoExistenteDeUmUsuario() throws Exception {
             driver.perform(post(URI_COMENTARIOS + "/" + usuario.getPublicacoes().stream().findFirst().get().getId() + "/usuario?idUsuario=" + usuario.getId())
                     .content(objectMapper.writeValueAsString(comentarioPostPutRequestDTO))
                     .contentType(MediaType.APPLICATION_JSON))

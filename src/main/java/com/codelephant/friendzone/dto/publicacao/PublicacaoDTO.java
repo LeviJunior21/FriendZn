@@ -1,6 +1,7 @@
 package com.codelephant.friendzone.dto.publicacao;
 
 import com.codelephant.friendzone.model.Comentario;
+import com.codelephant.friendzone.model.Usuario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -23,4 +24,7 @@ public class PublicacaoDTO {
 
     @JsonProperty("comentarios")
     private List<Comentario> comentarios;
+
+    @JsonProperty("usuario")
+    private Usuario usuario;
 }

@@ -25,9 +25,8 @@ public class ComentarioV1Controller {
             @PathVariable Long idPublicacao,
             @RequestParam Long idUsuario
     ) {
-        comentarioCriarService.salvar(comentarioPostPutRequestDTO, idPublicacao, idUsuario);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body("");
+                .body(comentarioCriarService.salvar(comentarioPostPutRequestDTO, idPublicacao, idUsuario));
     }
 }

@@ -1,7 +1,9 @@
 package com.codelephant.friendzone.controller;
 
+import com.codelephant.friendzone.dto.publicacao.PublicacaoDTO;
 import com.codelephant.friendzone.dto.publicacao.PublicacaoPostPutRequestDTO;
 import com.codelephant.friendzone.exception.CustomErrorType;
+import com.codelephant.friendzone.model.Publicacao;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
@@ -83,14 +85,17 @@ public class PublicacaoV1ControllerTests {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(publicacaoPostPutRequestDTO)))
                     .andDo(print())
-                    .andExpect(status().isNoContent())
+                    .andExpect(status().isCreated())
                     .andReturn().getResponse().getContentAsString();
+
+            PublicacaoDTO publicacaoDTO = objectMapper.readValue(responseJSONString, PublicacaoDTO.class);
 
             // Assert
             assertEquals(1, usuarioRepository.findAll().size());
             assertEquals(1, usuarioRepository.findById(usuario.getId()).get().getPublicacoes().size());
             assertEquals("Ola!", usuarioRepository.findById(usuario.getId()).get().getPublicacoes().stream().findFirst().get().getPublicacao());
             assertEquals(1, publicacaoRepository.findAll().size());
+            assertEquals("Levi", publicacaoDTO.getUsuario().getApelido());
             assertEquals("Ola!", publicacaoRepository.findAll().stream().findFirst().get().getPublicacao());
         }
 
@@ -111,6 +116,64 @@ public class PublicacaoV1ControllerTests {
             // Assert
             CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
             assertEquals("O usuario com esse id nao existe.", customErrorType.getMessage());
+        }
+
+        @Test
+        @DisplayName("Quando salvamos uma publicação para uma publicacao vazia.")
+        void quandoSalvamosUmaPublicacaoParaUmaPublicacaoVazia() throws Exception {
+            // Arrange
+            publicacaoPostPutRequestDTO.setPublicacao("");
+
+            // Act
+            String responseJSONString = driver.perform(post(URI_PUBLICACOES + "/publicacao?id=" + 100L)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(publicacaoPostPutRequestDTO)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
+            assertEquals("Publicacao invalida.", customErrorType.getErrors().get(0));
+        }
+
+        @Test
+        @DisplayName("Quando salvamos uma publicação para uma publicacao null.")
+        void quandoSalvamosUmaPublicacaoParaUmaPublicacaoNull() throws Exception {
+            // Arrange
+            publicacaoPostPutRequestDTO.setPublicacao(null);
+
+            // Act
+            String responseJSONString = driver.perform(post(URI_PUBLICACOES + "/publicacao?id=" + 100L)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(publicacaoPostPutRequestDTO)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+            assertEquals("Publicacao invalida.", customErrorType.getErrors().get(0));
+        }
+
+        @Test
+        @DisplayName("Quando salvamos uma publicação para um usuário válido mas código diferente.")
+        void quandoSalvamosUmaPublicacaoParaUmUsuarioValidoMasCodigoDiferente() throws Exception {
+            // Arrange
+            publicacaoPostPutRequestDTO.setCodigoAcesso(12346);
+
+            // Act
+            String responseJSONString = driver.perform(post(URI_PUBLICACOES + "/publicacao?id=" + usuario.getId())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(publicacaoPostPutRequestDTO)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+            assertEquals("O codigo de acesso eh diferente.", customErrorType.getMessage());
         }
     }
 }

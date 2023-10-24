@@ -16,11 +16,11 @@ import java.util.Date;
 @AllArgsConstructor
 public class PublicacaoPostPutRequestDTO {
     @JsonProperty("publicacao")
-    @NotBlank(message = "Publicaaoo invalida.")
+    @NotBlank(message = "Publicacao invalida.")
     private String publicacao;
 
     @JsonProperty("date")
-    @NotNull(message = "Data inválida.")
+    @NotNull(message = "Data invalida.")
     private Date date;
 
     @JsonProperty("codigoAcesso")
