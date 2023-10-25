@@ -22,7 +22,7 @@ public class UsuarioV1Controller {
     @Autowired
     UsuarioListarService usuarioListarService;
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<?> salvarUsuario(
             @RequestBody @Valid UsuarioPostPutRequestDTO usuarioPostPutRequestDTO
     ) {
