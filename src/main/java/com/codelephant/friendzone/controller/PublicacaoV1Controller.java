@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 public class PublicacaoV1Controller {
-
     @Autowired
     PublicacaoCriarService publicacaoCriarService;
 
