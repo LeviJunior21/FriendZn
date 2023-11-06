@@ -7,6 +7,7 @@ import com.codelephant.friendzone.model.Publicacao;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
+import com.codelephant.friendzone.utils.Categoria;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
@@ -73,6 +74,7 @@ public class ComentarioV1ControllerTests {
                     .comentarios(new ArrayList<>())
                     .usuario(usuarioTemp)
                     .date(new Date())
+                    .categoria(Categoria.amizade)
                     .build();
             usuarioTemp.getPublicacoes().add(publicacao);
 

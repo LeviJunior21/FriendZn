@@ -2,11 +2,13 @@ package com.codelephant.friendzone.controller;
 
 import com.codelephant.friendzone.dto.publicacao.PublicacaoDTO;
 import com.codelephant.friendzone.dto.publicacao.PublicacaoPostPutRequestDTO;
-import com.codelephant.friendzone.exception.CustomErrorType;
 import com.codelephant.friendzone.model.Publicacao;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.codelephant.friendzone.exception.CustomErrorType;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
+import com.codelephant.friendzone.utils.Categoria;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
@@ -18,11 +20,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -56,6 +60,7 @@ public class PublicacaoV1ControllerTests {
                     .publicacao("Ola!")
                     .codigoAcesso(123456)
                     .date(new Date())
+                    .categoria(Categoria.amizade)
                     .build();
 
             Usuario usuarioTemp = Usuario.builder()
@@ -97,6 +102,31 @@ public class PublicacaoV1ControllerTests {
             assertEquals(1, publicacaoRepository.findAll().size());
             assertEquals("Levi", publicacaoDTO.getUsuario().getApelido());
             assertEquals("Ola!", publicacaoRepository.findAll().stream().findFirst().get().getPublicacao());
+        }
+
+        @Test
+        @DisplayName("Quando salvamos uma publicação para um usuário existente.")
+        void quandoListamosTodasAsPublicacoesExistentes() throws Exception {
+            // Arrange
+            publicacaoRepository.save(Publicacao.builder()
+                            .categoria(Categoria.amizade)
+                            .date(new Date())
+                            .comentarios(new ArrayList<>())
+                            .publicacao("algo")
+                            .usuario(usuario)
+                            .build()
+            );
+
+            // Act
+            String responseJSONString = driver.perform(get(URI_PUBLICACOES)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(publicacaoPostPutRequestDTO)))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            List<PublicacaoDTO> resultado = objectMapper.readValue(responseJSONString, new TypeReference<List<PublicacaoDTO>>() {});
+            assertEquals(1, resultado.size());
         }
 
         @Test

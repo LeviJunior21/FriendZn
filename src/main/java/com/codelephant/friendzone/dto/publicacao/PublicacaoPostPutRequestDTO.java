@@ -1,5 +1,6 @@
 package com.codelephant.friendzone.dto.publicacao;
 
+import com.codelephant.friendzone.utils.Categoria;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
@@ -24,6 +25,10 @@ public class PublicacaoPostPutRequestDTO {
     private Date date;
 
     @JsonProperty("codigoAcesso")
-    @Column(nullable = false)
+    @NotNull(message = "Codigo de acesso invaalido.")
     private Integer codigoAcesso;
+
+    @JsonProperty("categoria")
+    @NotNull(message = "Categoria invalida.")
+    private Categoria categoria;
 }

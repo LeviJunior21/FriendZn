@@ -2,7 +2,9 @@ package com.codelephant.friendzone.dto.publicacao;
 
 import com.codelephant.friendzone.model.Comentario;
 import com.codelephant.friendzone.model.Usuario;
+import com.codelephant.friendzone.utils.Categoria;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.Date;
@@ -27,4 +29,7 @@ public class PublicacaoDTO {
 
     @JsonProperty("usuario")
     private Usuario usuario;
+
+    @JsonProperty("categoria")
+    private Categoria categoria;
 }

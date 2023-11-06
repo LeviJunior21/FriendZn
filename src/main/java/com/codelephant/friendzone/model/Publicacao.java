@@ -1,5 +1,6 @@
 package com.codelephant.friendzone.model;
 
+import com.codelephant.friendzone.utils.Categoria;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -42,4 +43,8 @@ public class Publicacao {
     @JsonManagedReference
     @JsonIgnore
     private List<Comentario> comentarios;
+
+    @JsonProperty("categoria")
+    @Column(nullable = false)
+    private Categoria categoria;
 }
