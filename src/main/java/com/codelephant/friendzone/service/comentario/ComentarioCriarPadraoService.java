@@ -10,11 +10,17 @@ import com.codelephant.friendzone.model.Publicacao;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
+@Transactional
 public class ComentarioCriarPadraoService implements ComentarioCriarService {
 
     @Autowired
@@ -25,7 +31,7 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
     UsuarioRepository usuarioRepository;
 
     @Override
-    public ComentarioDTO salvar(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO, Long idPublicacao, Long idUsuario) {
+    public List<ComentarioDTO> salvar(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO, Long idPublicacao, Long idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
         if (!comentarioPostPutRequestDTO.getCodigoAcesso().equals(usuario.getCodigoAcesso())) {
             throw new CodigoDeAcessoDiferenteException();
@@ -34,9 +40,14 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
         Comentario comentario = modelMapper.map(comentarioPostPutRequestDTO, Comentario.class);
         comentario.setUsuario(usuario);
         comentario.setPublicacao(publicacao);
+        comentario.setGostaram(new HashSet<Usuario>());
+        comentario.setNaoGostaram(new HashSet<Usuario>());
         publicacao.getComentarios().add(comentario);
         publicacaoRepository.save(publicacao);
-        ComentarioDTO comentarioDTO = modelMapper.map(comentario, ComentarioDTO.class);
-        return comentarioDTO;
+
+        List<Comentario> comentarios = publicacaoRepository.findById(idUsuario).get().getComentarios();
+        return comentarios.stream()
+                .map(comentarioI -> modelMapper.map(comentarioI, ComentarioDTO.class))
+                .collect(Collectors.toList());
     }
 }

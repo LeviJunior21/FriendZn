@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.Set;
+
 @Entity
 @Data
 @Builder
@@ -40,4 +42,12 @@ public class Comentario {
     @JoinColumn(name = "publicacao_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Publicacao publicacao;
+
+    @JsonProperty("gostaram")
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Usuario> gostaram;
+
+    @JsonProperty("naoGostaram")
+    @OneToMany(cascade = CascadeType.ALL)
+    private Set<Usuario> naoGostaram;
 }

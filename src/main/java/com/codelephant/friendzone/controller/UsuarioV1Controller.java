@@ -1,8 +1,11 @@
 package com.codelephant.friendzone.controller;
 
 import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
+import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
 import com.codelephant.friendzone.service.usuario.UsuarioCriarService;
+import com.codelephant.friendzone.service.usuario.UsuarioExistenciaService;
 import com.codelephant.friendzone.service.usuario.UsuarioListarService;
+import com.codelephant.friendzone.service.usuario.UsuarioValidarService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,10 @@ public class UsuarioV1Controller {
     UsuarioCriarService usuarioCriarService;
     @Autowired
     UsuarioListarService usuarioListarService;
+    @Autowired
+    UsuarioValidarService usuarioValidarService;
+    @Autowired
+    UsuarioExistenciaService usuarioExistenciaService;
 
     @PostMapping()
     public ResponseEntity<?> salvarUsuario(
@@ -38,4 +45,21 @@ public class UsuarioV1Controller {
                 .body(usuarioListarService.listar(null));
     }
 
+    @GetMapping("/usuario")
+    public ResponseEntity<?> validarUsuario(
+            @RequestBody @Valid UsuarioValidarDTO usuarioValidarDTO
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usuarioValidarService.validarInformacoes(usuarioValidarDTO));
+    }
+
+    @GetMapping("/validar/usuario")
+    public ResponseEntity<?> validarEmail(
+            @RequestParam String email
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usuarioExistenciaService.verificar(email));
+    }
 }

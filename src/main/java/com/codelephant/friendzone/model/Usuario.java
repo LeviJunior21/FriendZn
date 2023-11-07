@@ -38,4 +38,12 @@ public class Usuario {
     @OneToMany(cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Publicacao> publicacoes;
+
+    @JsonProperty("gostaram")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Comentario> gostaram;
+
+    @JsonProperty("naoGostaram")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Comentario> naoGostaram;
 }
