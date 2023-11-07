@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Data
@@ -35,5 +37,7 @@ public class Comentario {
     @JsonProperty("publicacao")
     @ManyToOne(optional = false)
     @JsonBackReference
+    @JoinColumn(name = "publicacao_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Publicacao publicacao;
 }
