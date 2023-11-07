@@ -50,6 +50,7 @@ func postPut(url string, jsonData []byte) {
 func main() {
 	usuarios := "http://localhost:8080/v1/usuarios"
 	publicacoes := "http://localhost:8080/v1/publicacoes"
+	comentarios := "http://localhost:8080/v1/comentarios"
 
 	jsonUserData := []byte(`{"apelido": "LeviJunior","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345}`)
 	fmt.Println("Criando usuário!")
@@ -64,6 +65,10 @@ func main() {
 	jsonPostData := []byte(`{"publicacao": "Boa noite!","date": "2023-10-24T12:00:00Z","codigoAcesso": 12345, "categoria": "amizade"}`)
 	postPut(criarPublicacoes, jsonPostData)
 
+	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=1"
+        jsonPostComentario := []byte(`{"comentario": "Ola pessoal!","codigoAcesso": 12345}`)
+        postPut(criarComentario, jsonPostComentario)
+
 	fmt.Println("\nRecuperando todos usuários criados:")
 	responseCriacaoUsuario2 := get(usuarios)
         fmt.Println("Resposta:", responseCriacaoUsuario2)
@@ -71,5 +76,9 @@ func main() {
 	fmt.Println("\n\nRecuperando todas as publicações criadas")
 	responsePublicacoesCriadas := get(publicacoes)
 	fmt.Println("Resposta:", responsePublicacoesCriadas)
+
+	fmt.Println("\n\nRecuperando todas os comentarios da pulicacao feita")
+        responseComentariosCriados := get(comentarios + "/publicacao/1 ")
+        fmt.Println("Resposta:", responseComentariosCriados)
 }
 
