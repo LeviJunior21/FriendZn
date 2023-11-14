@@ -90,7 +90,6 @@ public class ComentarioV1ControllerTests {
             usuario.setPublicacoes(publicacoes);
 
             usuario = usuarioRepository.save(usuario);
-
             publicacao = publicacaoRepository.save(publicacao);
             comentario = comentarioRepository.save(comentario);
 

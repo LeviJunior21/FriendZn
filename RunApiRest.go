@@ -66,7 +66,7 @@ func main() {
 	postPut(criarPublicacoes, jsonPostData)
 
 	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=1"
-        jsonPostComentario := []byte(`{"comentario": "Ola pessoal!","codigoAcesso": 12345}`)
+        jsonPostComentario := []byte(`{"comentario": "Olá pessoal!","codigoAcesso": 12345}`)
         postPut(criarComentario, jsonPostComentario)
 
 	fmt.Println("\nRecuperando todos usuários criados:")

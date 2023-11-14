@@ -23,9 +23,6 @@ public class ComentarioDTO {
     @JsonProperty("usuario")
     private Usuario usuario;
 
-    @JsonProperty("codigoAcesso")
-    private Integer codigoAcesso;
-
     @JsonProperty("publicacao")
     private Publicacao publicacao;
 
