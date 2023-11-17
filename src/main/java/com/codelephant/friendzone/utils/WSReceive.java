@@ -21,10 +21,10 @@ import java.util.concurrent.atomic.AtomicReference;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReceiveComentario implements Runnable {
+public class WSReceive implements Runnable {
     private WebSocketStompClient webSocketStompClient;
     private AtomicReference<String> messageReceive;
-    private static final Integer timeOut = 5;
+    private static final Integer timeOut = 1;
     private StompSession stompSession;
     private String webSocketUrl;
     private Semaphore semaphore;
@@ -60,6 +60,6 @@ public class ReceiveComentario implements Runnable {
     }
 
     public Integer getTimeOutAndIncrement(Integer value) {
-        return this.timeOut * 1000 + value;
+        return this.timeOut * 100 + value;
     }
 }

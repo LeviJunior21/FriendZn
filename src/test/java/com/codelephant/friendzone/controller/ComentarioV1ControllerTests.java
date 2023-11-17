@@ -9,10 +9,7 @@ import com.codelephant.friendzone.repository.ComentarioRepository;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
 import com.codelephant.friendzone.utils.Categoria;
-import com.codelephant.friendzone.utils.ComentarioWSConfig;
-import com.codelephant.friendzone.utils.ReceiveComentario;
-import com.codelephant.friendzone.utils.SendComentario;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.codelephant.friendzone.utils.WSConfig;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -23,18 +20,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.simp.stomp.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.StringUtils;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,22 +43,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ComentarioV1ControllerTests {
 
     @Autowired
-    MockMvc driver;
+    private MockMvc driver;
     @Autowired
-    UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
     @Autowired
-    PublicacaoRepository publicacaoRepository;
+    private PublicacaoRepository publicacaoRepository;
     @Autowired
-    ComentarioRepository comentarioRepository;
+    private ComentarioRepository comentarioRepository;
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
     @Autowired
-    WebSocketStompClient webSocketStompClient;
-
-    String URI_COMENTARIOS = "/v1/comentarios";
-
+    private WebSocketStompClient webSocketStompClient;
     @LocalServerPort
     private int port;
+    private final String URI_COMENTARIOS = "/v1/comentarios";
 
     public String getWsComentatarios() {
         return "ws://localhost:" + port + "/ws";
@@ -76,10 +66,11 @@ public class ComentarioV1ControllerTests {
     @DisplayName("Caso de testes para a API Rest Full;.")
     class TestTestFull {
 
-        Usuario usuario;
-        ComentarioPostPutRequestDTO comentarioPostPutRequestDTO;
-        Publicacao publicacao;
-        Comentario comentario;
+        private Usuario usuario;
+        private Publicacao publicacao;
+        private Comentario comentario;
+        private AtomicReference<String> mensagemRecebida;
+        private ComentarioPostPutRequestDTO comentarioPostPutRequestDTO;
 
         @BeforeEach
         void setup() {
@@ -115,6 +106,7 @@ public class ComentarioV1ControllerTests {
             usuario = usuarioRepository.save(usuario);
             publicacao = publicacaoRepository.save(publicacao);
             comentario = comentarioRepository.save(comentario);
+            mensagemRecebida = new AtomicReference<String>();
 
             comentarioPostPutRequestDTO = ComentarioPostPutRequestDTO.builder()
                     .comentario("Oi")
@@ -169,105 +161,26 @@ public class ComentarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando conectamos ao servidor usando WebSocket")
-        void quandoConectamosAoServidorUsandoWebSocket() throws Exception {
+        @DisplayName("Quando enviamos um comentário ao WebSocket")
+        void quandoEnviamosUmComentarioAoWebSocket() throws Exception {
             // Arrange
             // Nenhuma necessidade além do setup
 
             // Act
-            AtomicReference<String> mensagemRecebida = new AtomicReference<String>();
-            StompSession stompSession = webSocketStompClient.connect(getWsComentatarios(), new StompSessionHandlerAdapter() {
-                @Override
-                public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-                    System.out.println("Conectado ao servidor WebSocket com sucesso!");
-
-                    session.subscribe("/topic/public", new StompFrameHandler() {
-                        @Override
-                        public Type getPayloadType(StompHeaders headers) {
-                            return byte[].class;
-                        }
-
-                        @Override
-                        public void handleFrame(StompHeaders headers, Object payload) {
-                            mensagemRecebida.set(new String((byte[]) payload));
-                            System.out.println("Mensagem recebida: " + mensagemRecebida.get());
-                        }
-                    });
-                }
-            }).get(5, TimeUnit.SECONDS);
-
-            stompSession.send("/app/comentarios.sendMessage", objectMapper.writeValueAsString(comentarioPostPutRequestDTO));
-            Thread.sleep(6000);
-
-            System.out.println("Mensagem recebida no teste: " + mensagemRecebida.get());
-
-            // Assert
-            assertNotNull(mensagemRecebida.get());
-
-            if (StringUtils.hasText(mensagemRecebida.get())) {
-                ComentarioDTO comentarioDTOResponse = objectMapper.readValue(mensagemRecebida.get(), ComentarioDTO.class);
-                assertEquals(comentarioPostPutRequestDTO.getComentario(), comentarioDTOResponse.getComentario());
-            } else {
-                fail("A mensagem recebida está nula ou vazia.");
-            }
-        }
-
-        @Test
-        @DisplayName("Caso de teste da minha API")
-        void casoDeTesteDaMinhaApi() throws Exception {
-            // Arrange
-            // Nenhuma necessidade além do setup
-
-            // Act
-            Semaphore barrier = new Semaphore(0);
-            AtomicReference<String> mensagemRecebida = new AtomicReference<String>();
-            ReceiveComentario threadReceiveComentario = ReceiveComentario.builder()
-                    .webSocketUrl(getWsComentatarios())
-                    .webSocketStompClient(webSocketStompClient)
-                    .messageReceive(mensagemRecebida)
-                    .subscribe("/topic/public")
-                    .semaphore(barrier)
-                    .build();
-            Thread threadReceive = new Thread(threadReceiveComentario);
-            threadReceive.start();
-
-            barrier.acquire();
-
-            SendComentario threadSendComentario = SendComentario.builder()
-                    .data(objectMapper.writeValueAsString(comentarioPostPutRequestDTO))
-                    .destination("/app/comentarios.sendMessage")
-                    .stompSession(threadReceiveComentario.getStompSession())
-                    .build();
-            Thread threadSend = new Thread(threadSendComentario);
-            threadSend.start();
-
-            Thread.sleep(threadReceiveComentario.getTimeOutAndIncrement(1000));
-
-            try {
-                ComentarioDTO comentarioDTO = objectMapper.readValue(mensagemRecebida.get(), ComentarioDTO.class);
-                assertEquals(comentarioPostPutRequestDTO.getComentario(), comentarioDTO.getComentario());
-            } catch(Exception e) {
-                System.out.println("Ocorreu um erro ao mapear para ComentarioDTO.\n\nErro:\n\n" + e.getMessage());
-            }
-        }
-
-        @Test
-        @DisplayName("Quando testamos outra Api")
-        void quandoTestamosOutraApi() throws Exception {
-            ComentarioWSConfig comentarioWSConfig = ComentarioWSConfig.builder()
+            WSConfig comentarioWSConfig = WSConfig.builder()
                     .webSocketStompClient(webSocketStompClient)
                     .ws(getWsComentatarios())
                     .subscribe("/topic/public")
                     .destination("/app/comentarios.sendMessage")
                     .data(objectMapper.writeValueAsString(comentarioPostPutRequestDTO))
                     .build();
-
-            AtomicReference<String> mensagemRecebida = new AtomicReference<String>();
             comentarioWSConfig.run(mensagemRecebida);
 
+            // Assert
             ComentarioDTO comentarioDTO = objectMapper.readValue(mensagemRecebida.get(), ComentarioDTO.class);
-            assertEquals(comentarioPostPutRequestDTO.getComentario(), comentarioDTO.getComentario());
-
+            assertAll(
+                    () -> assertEquals(comentarioPostPutRequestDTO.getComentario(), comentarioDTO.getComentario())
+            );
         }
     }
 }

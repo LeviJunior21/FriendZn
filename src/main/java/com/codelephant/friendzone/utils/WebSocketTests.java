@@ -54,7 +54,9 @@ public class WebSocketTests {
 
 
     public void justSend(String destination, String objectAsString) throws Exception {
-        StompSession session = webSocketStompClient.connect(webSocketUrl, new StompSessionHandlerAdapter() {}).get(5, TimeUnit.SECONDS);
+        StompSession session = webSocketStompClient.connect(
+                webSocketUrl, new StompSessionHandlerAdapter() {}
+        ).get(5, TimeUnit.SECONDS);
         session.send(destination, objectAsString);
     }
 

@@ -1,6 +1,5 @@
 package com.codelephant.friendzone.controller;
 
-import com.codelephant.friendzone.dto.comentario.ComentarioDTO;
 import com.codelephant.friendzone.dto.comentario.ComentarioPostPutRequestDTO;
 import com.codelephant.friendzone.service.comentario.ComentarioCriarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ public class ComentarioController {
     public ComentarioPostPutRequestDTO sendComentario(@Payload ComentarioPostPutRequestDTO comentarioPostPutRequestDTO){
         try {
             comentarioCriarService.salvar(comentarioPostPutRequestDTO);
-            System.out.println("Comentario salvo com sucesso");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

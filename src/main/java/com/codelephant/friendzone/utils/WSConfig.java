@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ComentarioWSConfig {
+public class WSConfig {
     private WebSocketStompClient webSocketStompClient;
     private final Semaphore barrier = new Semaphore(0);
     private String destination;
@@ -20,7 +20,7 @@ public class ComentarioWSConfig {
     private String ws;
 
     public void run(AtomicReference<String> messageReceive) throws Exception {
-        ReceiveComentario threadReceiveComentario = ReceiveComentario.builder()
+        WSReceive wsReceive = WSReceive.builder()
                 .webSocketUrl(ws)
                 .webSocketStompClient(webSocketStompClient)
                 .messageReceive(messageReceive)
@@ -28,20 +28,20 @@ public class ComentarioWSConfig {
                 .semaphore(barrier)
                 .build();
 
-        Thread threadReceive = new Thread(threadReceiveComentario);
-        threadReceive.start();
+        Thread threadReceiver = new Thread(wsReceive);
+        threadReceiver.start();
 
         barrier.acquire();
 
-        SendComentario threadSendComentario = SendComentario.builder()
+        WSSend wsSend = WSSend.builder()
                 .data(data)
                 .destination(destination)
-                .stompSession(threadReceiveComentario.getStompSession())
+                .stompSession(wsReceive.getStompSession())
                 .build();
-        Thread threadSend = new Thread(threadSendComentario);
-        threadSend.start();
+        Thread threadSender = new Thread(wsSend);
+        threadSender.start();
 
-        Thread.sleep(threadReceiveComentario.getTimeOutAndIncrement(1000));
+        Thread.sleep(wsReceive.getTimeOutAndIncrement(100));
     }
 
 }

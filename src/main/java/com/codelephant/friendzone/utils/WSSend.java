@@ -8,7 +8,7 @@ import org.springframework.messaging.simp.stomp.StompSession;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendComentario implements Runnable {
+public class WSSend implements Runnable {
     private StompSession stompSession;
     private String destination;
     String data;
