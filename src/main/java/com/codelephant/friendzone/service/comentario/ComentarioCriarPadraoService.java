@@ -41,7 +41,7 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
         publicacao.getComentarios().add(buildComentario(comentarioPostPutRequestDTO, usuario, publicacao));
         publicacaoRepository.save(publicacao);
         List<Comentario> comentarios = publicacaoRepository.findById(comentarioPostPutRequestDTO.getIdUsuario()).get().getComentarios();
-        
+
         return comentarios.stream()
                 .map(comentarioI -> modelMapper.map(comentarioI, ComentarioDTO.class))
                 .collect(Collectors.toList());

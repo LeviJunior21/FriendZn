@@ -9,6 +9,9 @@ import com.codelephant.friendzone.repository.ComentarioRepository;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
 import com.codelephant.friendzone.utils.Categoria;
+import com.codelephant.friendzone.utils.ComentarioWSConfig;
+import com.codelephant.friendzone.utils.ReceiveComentario;
+import com.codelephant.friendzone.utils.SendComentario;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,9 +33,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -210,5 +212,62 @@ public class ComentarioV1ControllerTests {
             }
         }
 
+        @Test
+        @DisplayName("Caso de teste da minha API")
+        void casoDeTesteDaMinhaApi() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            Semaphore barrier = new Semaphore(0);
+            AtomicReference<String> mensagemRecebida = new AtomicReference<String>();
+            ReceiveComentario threadReceiveComentario = ReceiveComentario.builder()
+                    .webSocketUrl(getWsComentatarios())
+                    .webSocketStompClient(webSocketStompClient)
+                    .messageReceive(mensagemRecebida)
+                    .subscribe("/topic/public")
+                    .semaphore(barrier)
+                    .build();
+            Thread threadReceive = new Thread(threadReceiveComentario);
+            threadReceive.start();
+
+            barrier.acquire();
+
+            SendComentario threadSendComentario = SendComentario.builder()
+                    .data(objectMapper.writeValueAsString(comentarioPostPutRequestDTO))
+                    .destination("/app/comentarios.sendMessage")
+                    .stompSession(threadReceiveComentario.getStompSession())
+                    .build();
+            Thread threadSend = new Thread(threadSendComentario);
+            threadSend.start();
+
+            Thread.sleep(threadReceiveComentario.getTimeOutAndIncrement(1000));
+
+            try {
+                ComentarioDTO comentarioDTO = objectMapper.readValue(mensagemRecebida.get(), ComentarioDTO.class);
+                assertEquals(comentarioPostPutRequestDTO.getComentario(), comentarioDTO.getComentario());
+            } catch(Exception e) {
+                System.out.println("Ocorreu um erro ao mapear para ComentarioDTO.\n\nErro:\n\n" + e.getMessage());
+            }
+        }
+
+        @Test
+        @DisplayName("Quando testamos outra Api")
+        void quandoTestamosOutraApi() throws Exception {
+            ComentarioWSConfig comentarioWSConfig = ComentarioWSConfig.builder()
+                    .webSocketStompClient(webSocketStompClient)
+                    .ws(getWsComentatarios())
+                    .subscribe("/topic/public")
+                    .destination("/app/comentarios.sendMessage")
+                    .data(objectMapper.writeValueAsString(comentarioPostPutRequestDTO))
+                    .build();
+
+            AtomicReference<String> mensagemRecebida = new AtomicReference<String>();
+            comentarioWSConfig.run(mensagemRecebida);
+
+            ComentarioDTO comentarioDTO = objectMapper.readValue(mensagemRecebida.get(), ComentarioDTO.class);
+            assertEquals(comentarioPostPutRequestDTO.getComentario(), comentarioDTO.getComentario());
+
+        }
     }
 }
