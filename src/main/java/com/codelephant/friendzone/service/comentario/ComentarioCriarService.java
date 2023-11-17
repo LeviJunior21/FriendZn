@@ -7,5 +7,5 @@ import java.util.List;
 
 @FunctionalInterface
 public interface ComentarioCriarService {
-    List<ComentarioDTO> salvar(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO, Long idPublicacao, Long idUsuario);
+    List<ComentarioDTO> salvar(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO);
 }

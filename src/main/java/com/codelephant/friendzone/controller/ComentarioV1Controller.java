@@ -33,7 +33,7 @@ public class ComentarioV1Controller {
     ) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(comentarioCriarService.salvar(comentarioPostPutRequestDTO, idPublicacao, idUsuario));
+                .body(comentarioCriarService.salvar(comentarioPostPutRequestDTO));
     }
 
     @GetMapping("/publicacao/{idPublicacao}")

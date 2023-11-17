@@ -9,6 +9,7 @@ import com.codelephant.friendzone.repository.ComentarioRepository;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
 import com.codelephant.friendzone.utils.Categoria;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -17,12 +18,22 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
+import org.springframework.messaging.simp.stomp.*;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.StringUtils;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,10 +41,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
 @DisplayName("Casos de testes para publicação.")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext
 public class ComentarioV1ControllerTests {
 
     @Autowired
@@ -46,8 +58,17 @@ public class ComentarioV1ControllerTests {
     ComentarioRepository comentarioRepository;
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    WebSocketStompClient webSocketStompClient;
 
     String URI_COMENTARIOS = "/v1/comentarios";
+
+    @LocalServerPort
+    private int port;
+
+    public String getWsComentatarios() {
+        return "ws://localhost:" + port + "/ws";
+    }
 
     @Nested
     @DisplayName("Caso de testes para a API Rest Full;.")
@@ -96,6 +117,8 @@ public class ComentarioV1ControllerTests {
             comentarioPostPutRequestDTO = ComentarioPostPutRequestDTO.builder()
                     .comentario("Oi")
                     .codigoAcesso(123456)
+                    .idUsuario(usuario.getId())
+                    .idPublicacao(publicacao.getId())
                     .build();
         }
 
@@ -142,5 +165,48 @@ public class ComentarioV1ControllerTests {
                 () -> assertEquals("Ola", resultado.stream().findFirst().get().getComentario())
             );
         }
+
+        @Test
+        @DisplayName("Quando conectamos ao servidor usando WebSocket")
+        void quandoConectamosAoServidorUsandoWebSocket() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            AtomicReference<String> mensagemRecebida = new AtomicReference<String>();
+            StompSession stompSession = webSocketStompClient.connect(getWsComentatarios(), new StompSessionHandlerAdapter() {
+                @Override
+                public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
+                    System.out.println("Conectado ao servidor WebSocket com sucesso!");
+
+                    session.subscribe("/topic/public", new StompFrameHandler() {
+                        @Override
+                        public Type getPayloadType(StompHeaders headers) {
+                            return byte[].class;
+                        }
+
+                        @Override
+                        public void handleFrame(StompHeaders headers, Object payload) {
+                            mensagemRecebida.set(new String((byte[]) payload));
+                            System.out.println("Mensagem recebida: " + mensagemRecebida.get());
+                        }
+                    });
+                }
+            }).get(5, TimeUnit.SECONDS);
+
+            stompSession.send("/app/comentarios.sendMessage", objectMapper.writeValueAsString(comentarioPostPutRequestDTO));
+            Thread.sleep(6000);
+
+            // Assert
+            assertNotNull(mensagemRecebida.get());
+
+            if (StringUtils.hasText(mensagemRecebida.get())) {
+                ComentarioDTO comentarioDTOResponse = objectMapper.readValue(mensagemRecebida.get(), ComentarioDTO.class);
+                assertEquals(comentarioPostPutRequestDTO.getComentario(), comentarioDTOResponse.getComentario());
+            } else {
+                fail("A mensagem recebida está nula ou vazia.");
+            }
+        }
+
     }
 }

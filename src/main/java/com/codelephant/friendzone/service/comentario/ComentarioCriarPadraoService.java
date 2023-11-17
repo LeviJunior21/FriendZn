@@ -31,12 +31,12 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
     UsuarioRepository usuarioRepository;
 
     @Override
-    public List<ComentarioDTO> salvar(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO, Long idPublicacao, Long idUsuario) {
-        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
+    public List<ComentarioDTO> salvar(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO) {
+        Usuario usuario = usuarioRepository.findById(comentarioPostPutRequestDTO.getIdUsuario()).orElseThrow(UsuarioNaoExisteException::new);
         if (!comentarioPostPutRequestDTO.getCodigoAcesso().equals(usuario.getCodigoAcesso())) {
             throw new CodigoDeAcessoDiferenteException();
         }
-        Publicacao publicacao = publicacaoRepository.findById(idPublicacao).orElseThrow(PublicacaoNaoExisteException::new);
+        Publicacao publicacao = publicacaoRepository.findById(comentarioPostPutRequestDTO.getIdPublicacao()).orElseThrow(PublicacaoNaoExisteException::new);
         Comentario comentario = modelMapper.map(comentarioPostPutRequestDTO, Comentario.class);
         comentario.setUsuario(usuario);
         comentario.setPublicacao(publicacao);
@@ -45,7 +45,7 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
         publicacao.getComentarios().add(comentario);
         publicacaoRepository.save(publicacao);
 
-        List<Comentario> comentarios = publicacaoRepository.findById(idUsuario).get().getComentarios();
+        List<Comentario> comentarios = publicacaoRepository.findById(comentarioPostPutRequestDTO.getIdUsuario()).get().getComentarios();
         return comentarios.stream()
                 .map(comentarioI -> modelMapper.map(comentarioI, ComentarioDTO.class))
                 .collect(Collectors.toList());
