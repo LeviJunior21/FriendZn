@@ -197,6 +197,8 @@ public class ComentarioV1ControllerTests {
             stompSession.send("/app/comentarios.sendMessage", objectMapper.writeValueAsString(comentarioPostPutRequestDTO));
             Thread.sleep(6000);
 
+            System.out.println("Mensagem recebida no teste: " + mensagemRecebida.get());
+
             // Assert
             assertNotNull(mensagemRecebida.get());
 

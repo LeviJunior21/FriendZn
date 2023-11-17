@@ -36,18 +36,25 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
         if (!comentarioPostPutRequestDTO.getCodigoAcesso().equals(usuario.getCodigoAcesso())) {
             throw new CodigoDeAcessoDiferenteException();
         }
+
         Publicacao publicacao = publicacaoRepository.findById(comentarioPostPutRequestDTO.getIdPublicacao()).orElseThrow(PublicacaoNaoExisteException::new);
-        Comentario comentario = modelMapper.map(comentarioPostPutRequestDTO, Comentario.class);
+        publicacao.getComentarios().add(buildComentario(comentarioPostPutRequestDTO, usuario, publicacao));
+        publicacaoRepository.save(publicacao);
+        List<Comentario> comentarios = publicacaoRepository.findById(comentarioPostPutRequestDTO.getIdUsuario()).get().getComentarios();
+        
+        return comentarios.stream()
+                .map(comentarioI -> modelMapper.map(comentarioI, ComentarioDTO.class))
+                .collect(Collectors.toList());
+    }
+
+    private Comentario buildComentario(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO, Usuario usuario, Publicacao publicacao) {
+        Comentario comentario = Comentario.builder().build();
         comentario.setUsuario(usuario);
         comentario.setPublicacao(publicacao);
         comentario.setGostaram(new HashSet<Usuario>());
         comentario.setNaoGostaram(new HashSet<Usuario>());
-        publicacao.getComentarios().add(comentario);
-        publicacaoRepository.save(publicacao);
-
-        List<Comentario> comentarios = publicacaoRepository.findById(comentarioPostPutRequestDTO.getIdUsuario()).get().getComentarios();
-        return comentarios.stream()
-                .map(comentarioI -> modelMapper.map(comentarioI, ComentarioDTO.class))
-                .collect(Collectors.toList());
+        comentario.setComentario(comentarioPostPutRequestDTO.getComentario());
+        comentario.setCodigoAcesso(comentarioPostPutRequestDTO.getCodigoAcesso());
+        return comentario;
     }
 }
