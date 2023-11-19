@@ -44,10 +44,6 @@ Código base gerado via [start.sprint.io](https://start.spring.io/#!type=maven-p
 
 <code>> mvn clean test </code>
 
-### Requisições HTTP local
-
-- go run RunApiRest.go
-
 ## Contato e Dúvidas
 
 levi.pereira.junior@ccc.ufcg.edu.br
