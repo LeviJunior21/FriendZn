@@ -1,13 +1,4 @@
-# FriendZn
-### Construa o projeto FriendZone usando o comando Gradle:
-- ./gradlew clean build
-### Execute a aplicação Spring para o arquivo Jar gerado:
-- java -jar build/libs/friendzone-0.0.1-SNAPSHOT.jar
-### Se preferir
-- ./gradlew bootRun --args="--server.port=9000"
-### Requisições HTTP
-- go run RunApiRest.go
-
+# FriendZone
 
 Recentemente, diversas plataformas de redes sociais anônimas têm optado por se distanciar das grandes redes consolidadas. As motivações para essa mudança são variadas, desde a evolução no modelo de interação dos usuários até as preocupações com a privacidade e a busca por alternativas mais independentes.
 
@@ -25,6 +16,7 @@ Com o Spring Boot, o FriendZOne busca criar uma experiência de usuário única 
 - Há implementação de frontend (aqui: [FriendZoneApp](https://github.com/LeviJunior21/FriendZnApp)) e o projeto fornece uma interface de acesso à API via swagger.
 
 ## Tecnologias
+
 Código base gerado via [start.sprint.io](https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.3.3.RELEASE&packaging=jar&jvmVersion=1.8&groupId=com.example&artifactId=EstoqueFacil&name=EstoqueFacil&description=Projeto%20Estoque%20Facil&packageName=com.example.EstoqueFacil&dependencies=web,actuator,devtools,data-jpa,h2) com as seguintes dependências:
 
 - Spring Web
@@ -37,3 +29,25 @@ Código base gerado via [start.sprint.io](https://start.spring.io/#!type=maven-p
 - H2 Database
 - Cucumber
 
+## Execução da Aplicação
+
+### Construa o projeto FriendZone usando o comando Gradle:
+- ./gradlew clean build
+### Execute a aplicação Spring para o arquivo Jar gerado:
+- java -jar build/libs/friendzone-0.0.1-SNAPSHOT.jar
+### Se preferir
+- ./gradlew bootRun --args="--server.port=9000"
+### Requisições HTTP local
+- go run RunApiRest.go
+
+## Testes
+
+<code>> mvn clean test </code>
+
+### Requisições HTTP local
+
+- go run RunApiRest.go
+
+## Contato e Dúvidas
+
+levi.pereira.junior@ccc.ufcg.edu.br
