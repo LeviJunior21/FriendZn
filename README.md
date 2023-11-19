@@ -10,6 +10,7 @@ Com o Spring Boot, o FriendZOne busca criar uma experiência de usuário única 
 
 - Um projeto: FriendZone;
 - Controllers que implementam os endpoints da API Rest (VersionController, UsuarioV1Controller, PublicacaoV1Controller e ComentarioV1Controller).
+- Uso de WebSocket para tráfego de comentários entre as publicações dos usuarios.
 - Quatro repositórios são utilizados: UsuarioRepository, PublicacaoRepository e ComentarioRepository, que são responsáveis por manipular as entidades Usuario, Publicação e Comentario em um banco de dados em memória;
 - O modelo é composto pelas classes Usuario.java, Publicacao.java e Comentario.java, que podem ser encontradas no pacote model;
 - O pacote exceptions guarda as classes de exceções que podem ser levantadas dentro do sistema;
