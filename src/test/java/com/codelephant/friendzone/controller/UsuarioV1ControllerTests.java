@@ -108,7 +108,7 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando tentamos salvar um usuário com nome vazio.")
+        @DisplayName("Quando tentamos salvar um usuário com o nome vazio.")
         void quandoSalvamosUmUsuarioComNomeVazio() throws Exception {
             // Arrange
             usuarioPostPutRequestDTO.setApelido("");
@@ -129,7 +129,7 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando tentamos salvar um usuário com nome null.")
+        @DisplayName("Quando tentamos salvar um usuário com o nome null.")
         void quandoSalvamosUmUsuarioComNomeNull() throws Exception {
             // Arrange
             usuarioPostPutRequestDTO.setApelido(null);
@@ -150,7 +150,7 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando tentamos salvar um usuário com email vazio.")
+        @DisplayName("Quando tentamos salvar um usuário com o email vazio.")
         void quandoSalvamosUmUsuarioComEmailVazio() throws Exception {
             // Arrange
             usuarioPostPutRequestDTO.setEmail("");
@@ -171,7 +171,7 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando tentamos salvar um usuário com email null.")
+        @DisplayName("Quando tentamos salvar um usuário com o email null.")
         void quandoSalvamosUmUsuarioComEmailNull() throws Exception {
             // Arrange
             usuarioPostPutRequestDTO.setEmail(null);
@@ -192,7 +192,7 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando tentamos salvar um usuário com email null.")
+        @DisplayName("Quando verificamos a existencia do usuario.")
         void quandoVerificamosExistenciaDoUsuario() throws Exception {
             // Arrange
             String responseJSONString = driver.perform(get(URI_USUARIOS + "/validar/usuario?email=" + usuario.getEmail())
@@ -207,7 +207,7 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando tentamos salvar um usuário com email null.")
+        @DisplayName("Quando validamos as informações do usuário.")
         void quandoValidamosInformacoesDoUsuario() throws Exception {
             // Arrange
             String responseJSONString = driver.perform(get(URI_USUARIOS + "/usuario")
@@ -222,7 +222,7 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando tentamos salvar um usuário com email null.")
+        @DisplayName("Quando verificamos a Inexistência do usuário.")
         void quandoVerificamosInExistenciaDoUsuario() throws Exception {
             // Arrange
             String responseJSONString = driver.perform(get(URI_USUARIOS + "/validar/usuario?email=email@exemplo.com")
@@ -237,8 +237,8 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando tentamos salvar um usuário com email null.")
-        void quandoValidamosAInvalidadeDasInformacoesDoCodigoDeAcessoAoUsuario() throws Exception {
+        @DisplayName("Quando verificamos a invalidade das informações do código de acesso ao usuário.")
+        void quandoVerificamosAInvalidadeDasInformacoesDoCodigoDeAcessoAoUsuario() throws Exception {
             // Arrange
             usuarioValidarDTO.setCodigoAcesso(123489);
 
@@ -254,7 +254,7 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando tentamos salvar um usuário com email null.")
+        @DisplayName("Quando validamos a invalidade das informações do email ao usuário.")
         void quandoValidamosAInvalidadeDasInformacoesDoEmailAoUsuario() throws Exception {
             // Arrange
             usuarioValidarDTO.setEmail("email@gmail.com");
