@@ -2,7 +2,7 @@
 
 Recentemente, diversas plataformas de redes sociais anônimas têm optado por se distanciar das grandes redes consolidadas. As motivações para essa mudança são variadas, desde a evolução no modelo de interação dos usuários até as preocupações com a privacidade e a busca por alternativas mais independentes.
 
-Entretanto, em 2023, simplesmente não é prático retroceder aos métodos convencionais de interação online. Foi por isso que decidimos desenvolver o "FriendZone".
+Entretanto, em 2023, simplesmente não é prático retroceder aos métodos convencionais de interação online. Foi por isso que decidimos desenvolver o FriendZone.
 
 Com o Spring Boot, o FriendZone busca criar uma experiência de usuário única e personalizada, permitindo que os usuários compartilhem seus pensamentos de forma anônima, obtenham conselhos da comunidade e construam conexões significativas sem as amarras das grandes redes tradicionais. Estamos empolgados em colaborar nesse desenvolvimento e criar uma plataforma que respeite a privacidade dos usuários enquanto promove uma comunidade vibrante e solidária.
 
