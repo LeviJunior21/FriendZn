@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -50,4 +51,7 @@ public class Comentario {
     @JsonProperty("naoGostaram")
     @OneToMany(cascade = CascadeType.ALL)
     private Set<Usuario> naoGostaram;
+
+    @JsonProperty("timestamp")
+    private Date timestamp;
 }

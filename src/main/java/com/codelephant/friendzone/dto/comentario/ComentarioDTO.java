@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 import java.util.Set;
 
 @Data
@@ -20,15 +22,15 @@ public class ComentarioDTO {
     @JsonProperty("comentario")
     private String comentario;
 
-    @JsonProperty("usuario")
-    private Usuario usuario;
-
-    @JsonProperty("publicacao")
-    private Publicacao publicacao;
+    @JsonProperty("usuarioId")
+    private Long usuarioId;
 
     @JsonProperty("gostaram")
     private Set<Usuario> gostaram;
 
     @JsonProperty("naoGostaram")
     private Set<Usuario> naoGostaram;
+
+    @JsonProperty("timestamp")
+    private Date timestamp;
 }

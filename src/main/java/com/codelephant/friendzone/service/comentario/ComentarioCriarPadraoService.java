@@ -11,13 +11,12 @@ import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -31,20 +30,33 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
     UsuarioRepository usuarioRepository;
 
     @Override
-    public List<ComentarioDTO> salvar(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO) {
-        Usuario usuario = usuarioRepository.findById(comentarioPostPutRequestDTO.getIdUsuario()).orElseThrow(UsuarioNaoExisteException::new);
+    public ComentarioDTO salvar(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO, Long idPublicacao) {
+        Usuario usuario = usuarioRepository.findById(comentarioPostPutRequestDTO.getIdUsuario())
+                .orElseThrow(UsuarioNaoExisteException::new);
+
+        Publicacao publicacao = publicacaoRepository.findById(idPublicacao)
+                .orElseThrow(PublicacaoNaoExisteException::new);
+
         if (!comentarioPostPutRequestDTO.getCodigoAcesso().equals(usuario.getCodigoAcesso())) {
             throw new CodigoDeAcessoDiferenteException();
         }
 
-        Publicacao publicacao = publicacaoRepository.findById(comentarioPostPutRequestDTO.getIdPublicacao()).orElseThrow(PublicacaoNaoExisteException::new);
-        publicacao.getComentarios().add(buildComentario(comentarioPostPutRequestDTO, usuario, publicacao));
-        publicacaoRepository.save(publicacao);
-        List<Comentario> comentarios = publicacaoRepository.findById(comentarioPostPutRequestDTO.getIdUsuario()).get().getComentarios();
+        Comentario comentario = buildComentario(comentarioPostPutRequestDTO, usuario, publicacao);
 
-        return comentarios.stream()
-                .map(comentarioI -> modelMapper.map(comentarioI, ComentarioDTO.class))
-                .collect(Collectors.toList());
+        Hibernate.initialize(comentario.getGostaram());
+        Hibernate.initialize(comentario.getNaoGostaram());
+
+        publicacao.getComentarios().add(comentario);
+        publicacaoRepository.save(publicacao);
+
+        return ComentarioDTO.builder()
+                .id(comentario.getId())
+                .comentario(comentarioPostPutRequestDTO.getComentario())
+                .usuarioId(comentario.getUsuario().getId())
+                .gostaram(new HashSet<>())
+                .naoGostaram(new HashSet<>())
+                .timestamp(comentarioPostPutRequestDTO.getTimestamp())
+                .build();
     }
 
     private Comentario buildComentario(ComentarioPostPutRequestDTO comentarioPostPutRequestDTO, Usuario usuario, Publicacao publicacao) {
@@ -55,6 +67,7 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
         comentario.setNaoGostaram(new HashSet<Usuario>());
         comentario.setComentario(comentarioPostPutRequestDTO.getComentario());
         comentario.setCodigoAcesso(comentarioPostPutRequestDTO.getCodigoAcesso());
+        comentario.setTimestamp(comentarioPostPutRequestDTO.getTimestamp());
         return comentario;
     }
 }

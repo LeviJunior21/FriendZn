@@ -62,4 +62,12 @@ public class UsuarioV1Controller {
                 .status(HttpStatus.OK)
                 .body(usuarioExistenciaService.verificar(email));
     }
+
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<?> getUsuario(@PathVariable Long id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usuarioListarService.listar(id).get(0));
+    }
+
 }

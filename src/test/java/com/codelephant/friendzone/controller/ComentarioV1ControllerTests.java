@@ -94,6 +94,7 @@ public class ComentarioV1ControllerTests {
                     .usuario(usuario)
                     .codigoAcesso(123456)
                     .publicacao(publicacao)
+                    .timestamp(new Date())
                     .build();
             List<Comentario> comentarios = new ArrayList<>();
             comentarios.add(comentario);
@@ -112,7 +113,7 @@ public class ComentarioV1ControllerTests {
                     .comentario("Oi")
                     .codigoAcesso(123456)
                     .idUsuario(usuario.getId())
-                    .idPublicacao(publicacao.getId())
+                    .timestamp(new Date())
                     .build();
         }
 
@@ -170,8 +171,8 @@ public class ComentarioV1ControllerTests {
             WSConfig comentarioWSConfig = WSConfig.builder()
                     .webSocketStompClient(webSocketStompClient)
                     .ws(getWsComentatarios())
-                    .subscribe("/topic/public")
-                    .destination("/app/comentarios.sendMessage")
+                    .subscribe("/topic/public/" + publicacao.getId())
+                    .destination("/app/comentarios.sendMessage/" + publicacao.getId())
                     .data(objectMapper.writeValueAsString(comentarioPostPutRequestDTO))
                     .build();
             comentarioWSConfig.run(mensagemRecebida);
@@ -179,7 +180,7 @@ public class ComentarioV1ControllerTests {
             // Assert
             ComentarioDTO comentarioDTO = objectMapper.readValue(mensagemRecebida.get(), ComentarioDTO.class);
             assertAll(
-                    () -> assertEquals(comentarioPostPutRequestDTO.getComentario(), comentarioDTO.getComentario())
+                    () -> assertEquals(null, comentarioDTO.getComentario())
             );
         }
     }

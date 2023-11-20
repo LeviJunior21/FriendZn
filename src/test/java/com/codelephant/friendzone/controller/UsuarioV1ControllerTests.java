@@ -7,6 +7,7 @@ import com.codelephant.friendzone.exception.CustomErrorType;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -268,6 +270,22 @@ public class UsuarioV1ControllerTests {
 
             CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
             assertEquals("O usuario com esse id nao existe.", customErrorType.getMessage());
+        }
+
+        @Test
+        @DisplayName("Quando buscamos por um usuário específico pelo ID.")
+        void quandoBuscamosPorUmUsuarioEspecificoPeloID() throws Exception {
+            String responseJSONString = driver.perform(get(URI_USUARIOS + "/usuario/" + usuario.getId())
+                                .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            UsuarioDTO usuarioDTO = objectMapper.readValue(responseJSONString, UsuarioDTO.class);
+
+            assertAll(
+                () -> assertEquals(usuario.getApelido(), usuarioDTO.getApelido())
+            );
         }
     }
 }
