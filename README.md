@@ -33,13 +33,13 @@ Código base gerado via [start.sprint.io](https://start.spring.io/#!type=maven-p
 ## Execução da Aplicação
 
 ### Construção do projeto FriendZone usando o comando Gradle:
-- ./gradlew clean build
+<code>> ./gradlew clean build </code>
 ### Execução da aplicação Spring para o arquivo Jar gerado:
-- java -jar build/libs/friendzone-0.0.1-SNAPSHOT.jar
+<code>> java -jar build/libs/friendzone-0.0.1-SNAPSHOT.jar </code>
 ### Se preferir
-- ./gradlew bootRun --args="--server.port=9000"
+<code>> ./gradlew bootRun --args="--server.port=9000" </code>
 ### Requisições HTTP local
-- go run RunApiRest.go
+<code>> go run RunApiRest.go </code>
 
 ## Testes
 
