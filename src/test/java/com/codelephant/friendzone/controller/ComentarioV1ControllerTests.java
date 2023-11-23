@@ -175,7 +175,7 @@ public class ComentarioV1ControllerTests {
                     .destination("/app/comentarios.sendMessage/" + publicacao.getId())
                     .data(objectMapper.writeValueAsString(comentarioPostPutRequestDTO))
                     .build();
-            comentarioWSConfig.run(mensagemRecebida);
+            comentarioWSConfig.runSendAndReceive(mensagemRecebida);
 
             // Assert
             ComentarioDTO comentarioDTO = objectMapper.readValue(mensagemRecebida.get(), ComentarioDTO.class);

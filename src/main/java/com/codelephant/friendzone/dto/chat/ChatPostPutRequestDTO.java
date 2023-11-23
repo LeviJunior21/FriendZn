@@ -1,7 +1,8 @@
 package com.codelephant.friendzone.dto.chat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,10 +16,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MensagemPostPutRequestDTO {
-    @JsonProperty("id")
-    private Long id;
-
+public class ChatPostPutRequestDTO {
     @JsonProperty("remetente")
     @NotNull(message = "Id do remetente eh invalido.")
     private Long remetente;
@@ -34,4 +32,13 @@ public class MensagemPostPutRequestDTO {
     @JsonProperty("data")
     @NotNull(message = "Data invalida.")
     private Date data;
+
+    public ChatPostPutRequestDTO(String jsonString) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ChatPostPutRequestDTO chatPostPutRequestDTO = objectMapper.readValue(jsonString, ChatPostPutRequestDTO.class);
+        this.remetente = chatPostPutRequestDTO.getRemetente();
+        this.receptor = chatPostPutRequestDTO.getReceptor();
+        this.conteudo = chatPostPutRequestDTO.getConteudo();
+        this.data = chatPostPutRequestDTO.getData();
+    }
 }

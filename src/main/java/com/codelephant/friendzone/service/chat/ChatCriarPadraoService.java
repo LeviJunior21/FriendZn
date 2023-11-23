@@ -1,6 +1,6 @@
 package com.codelephant.friendzone.service.chat;
 
-import com.codelephant.friendzone.dto.chat.MensagemPostPutRequestDTO;
+import com.codelephant.friendzone.dto.chat.ChatPostPutRequestDTO;
 import com.codelephant.friendzone.exception.usuario.UsuarioNaoExisteException;
 import com.codelephant.friendzone.model.Conversa;
 import com.codelephant.friendzone.model.Mensagem;
@@ -26,7 +26,7 @@ public class ChatCriarPadraoService implements ChatCriarService {
     UsuarioRepository usuarioRepository;
 
     @Override
-    public Mensagem salvar(MensagemPostPutRequestDTO mensagemPostPutRequestDTO) {
+    public Mensagem salvar(ChatPostPutRequestDTO mensagemPostPutRequestDTO) {
         Usuario usuario1 = usuarioRepository.findById(mensagemPostPutRequestDTO.getRemetente()).orElseThrow(UsuarioNaoExisteException::new);
         usuarioRepository.findById(mensagemPostPutRequestDTO.getReceptor()).orElseThrow(UsuarioNaoExisteException::new);
 
