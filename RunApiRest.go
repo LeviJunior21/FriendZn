@@ -53,19 +53,19 @@ func main() {
 	publicacoes := "http://localhost:8080/v1/publicacoes"
 	comentarios := "http://localhost:8080/v1/comentarios"
 	**/
-	jsonUserData := []byte(`{"apelido": "LeviJunior","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345}`)
+	jsonUserData := []byte(`{"apelido": "Levi","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345}`)
 	fmt.Println("Criando usuário!")
 	postPut(usuarios, jsonUserData)
 
 	fmt.Println("\nRecuperando todos usuários criados:")
 	responseCriacaoUsuario := get(usuarios)
 	fmt.Println("Resposta:", responseCriacaoUsuario)
-	/**
+	
 	fmt.Println("\nCriando uma publicação para o usuário criado!")
-	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=1"
+	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=3"
 	jsonPostData := []byte(`{"publicacao": "Boa noite!","date": "2023-10-24T12:00:00Z","codigoAcesso": 12345, "categoria": "amizade"}`)
 	postPut(criarPublicacoes, jsonPostData)
-
+	/**
 	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=1"
         jsonPostComentario := []byte(`{"comentario": "Olá pessoal!","codigoAcesso": 12345}`)
         postPut(criarComentario, jsonPostComentario)

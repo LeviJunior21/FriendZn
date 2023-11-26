@@ -25,20 +25,20 @@ public class ChatPostPutRequestDTO {
     @NotNull(message = "Id do receptor eh invalido.")
     private Long receptor;
 
-    @JsonProperty("conteudo")
+    @JsonProperty("mensagem")
     @NotEmpty(message = "Conteudo nao pode estar vazio.")
-    private String conteudo;
+    private String mensagem;
 
-    @JsonProperty("data")
+    @JsonProperty("timestamp")
     @NotNull(message = "Data invalida.")
-    private Date data;
+    private Date timestamp;
 
     public ChatPostPutRequestDTO(String jsonString) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ChatPostPutRequestDTO chatPostPutRequestDTO = objectMapper.readValue(jsonString, ChatPostPutRequestDTO.class);
         this.remetente = chatPostPutRequestDTO.getRemetente();
         this.receptor = chatPostPutRequestDTO.getReceptor();
-        this.conteudo = chatPostPutRequestDTO.getConteudo();
-        this.data = chatPostPutRequestDTO.getData();
+        this.mensagem = chatPostPutRequestDTO.getMensagem();
+        this.timestamp = chatPostPutRequestDTO.getTimestamp();
     }
 }

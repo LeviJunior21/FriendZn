@@ -21,9 +21,9 @@ public class ChatController {
 
     @MessageMapping("/private-message")
     public ChatPostPutRequestDTO chat(@Payload ChatPostPutRequestDTO chatPostPutRequestDTO) {
-        System.out.println("Mensagem recebida: " + chatPostPutRequestDTO.getConteudo());
-        System.out.println("Usuarios ouvintes: " + simpUserRegistry.getUsers().stream().map(SimpUser::getName).collect(Collectors.toList()).toString());
+        System.out.println("Mensagem recebida: " + chatPostPutRequestDTO.getMensagem());
         simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatPostPutRequestDTO.getReceptor()), "/private", chatPostPutRequestDTO);
+        simpMessagingTemplate.convertAndSendToUser(String.valueOf(chatPostPutRequestDTO.getRemetente()), "/private", chatPostPutRequestDTO);
         return chatPostPutRequestDTO;
     }
 }

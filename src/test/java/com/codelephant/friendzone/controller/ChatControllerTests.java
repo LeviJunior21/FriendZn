@@ -46,8 +46,8 @@ public class ChatControllerTests {
         mensagemRecebida = new AtomicReference<String>();
 
         chatPostPutRequestDTO = ChatPostPutRequestDTO.builder()
-                .conteudo("Ola")
-                .data(new Date())
+                .mensagem("Ola")
+                .timestamp(new Date())
                 .remetente(1L)
                 .receptor(2L)
                 .build();
@@ -80,7 +80,7 @@ public class ChatControllerTests {
         ChatPostPutRequestDTO chatTeste = objectMapper.readValue(mensagemRecebida.get(),ChatPostPutRequestDTO.class);
 
         assertAll(
-                () -> assertEquals(chatPostPutRequestDTO.getConteudo(), chatTeste.getConteudo())
+                () -> assertEquals(chatPostPutRequestDTO.getMensagem(), chatTeste.getMensagem())
         );
     }
 
