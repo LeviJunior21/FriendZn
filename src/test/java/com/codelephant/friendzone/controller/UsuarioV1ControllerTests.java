@@ -7,7 +7,6 @@ import com.codelephant.friendzone.exception.CustomErrorType;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.transaction.Transactional;
@@ -19,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,7 +57,7 @@ public class UsuarioV1ControllerTests {
 
             usuario = Usuario.builder()
                     .email("levi.lima@estudante.ufcg.edu.br")
-                    .codigoAcesso(123456)
+                    .codigoAcesso(123456L)
                     .apelido("Levi")
                     .publicacoes(new ArrayList<>())
                     .gostaram(new ArrayList<>())
@@ -69,13 +67,13 @@ public class UsuarioV1ControllerTests {
             usuarioPostPutRequestDTO = UsuarioPostPutRequestDTO.builder()
                     .apelido("Levi")
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
-                    .codigoAcesso(123456)
+                    .codigoAcesso(123456L)
                     .build();
 
             usuarioValidarDTO = UsuarioValidarDTO.builder()
                     .email("levi.lima@estudante.ufcg.edu.br")
                     .idGoogle(12345678)
-                    .codigoAcesso(123456)
+                    .codigoAcesso(123456L)
                     .build();
 
             usuario = usuarioRepository.save(usuario);
@@ -231,18 +229,18 @@ public class UsuarioV1ControllerTests {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(usuarioPostPutRequestDTO)))
                     .andDo(print())
-                    .andExpect(status().isOk())
+                    .andExpect(status().isBadRequest())
                     .andReturn().getResponse().getContentAsString();
 
-            Boolean response = objectMapper.readValue(responseJSONString, Boolean.class);
-            assertEquals(false, response);
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+            assertEquals("O usuario com esse id nao existe.", customErrorType.getMessage());
         }
 
         @Test
         @DisplayName("Quando verificamos a invalidade das informações do código de acesso ao usuário.")
         void quandoVerificamosAInvalidadeDasInformacoesDoCodigoDeAcessoAoUsuario() throws Exception {
             // Arrange
-            usuarioValidarDTO.setCodigoAcesso(123489);
+            usuarioValidarDTO.setCodigoAcesso(123489L);
 
             String responseJSONString = driver.perform(get(URI_USUARIOS + "/usuario")
                             .contentType(MediaType.APPLICATION_JSON)

@@ -6,6 +6,7 @@ import com.codelephant.friendzone.exception.usuario.CodigoDeAcessoDiferenteExcep
 import com.codelephant.friendzone.exception.usuario.UsuarioNaoExisteException;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.UsuarioRepository;
+import com.codelephant.friendzone.utils.validacao.ValidarCodigoAcesso;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,13 @@ public class UsuarioValidarPadraoService implements UsuarioValidarService {
     UsuarioRepository usuarioRepository;
     @Autowired
     ModelMapper modelMapper;
+    @Autowired
+    ValidarCodigoAcesso validarCodigoAcesso;
 
     @Override
     public UsuarioDTO validarInformacoes(UsuarioValidarDTO usuarioValidarDTO) {
-        Usuario usuario = usuarioRepository.findByEmail(usuarioValidarDTO.getEmail());
-        if (usuario == null) {
-            throw new UsuarioNaoExisteException();
-        } else if (!usuario.getCodigoAcesso().equals(usuarioValidarDTO.getCodigoAcesso())) {
-            throw new CodigoDeAcessoDiferenteException();
-        }
+        Usuario usuario = usuarioRepository.findByEmail(usuarioValidarDTO.getEmail()).orElseThrow(UsuarioNaoExisteException::new);
+        validarCodigoAcesso.validar(usuarioValidarDTO.getCodigoAcesso(), usuario.getCodigoAcesso()).orElseThrow(CodigoDeAcessoDiferenteException::new);
         return modelMapper.map(usuario, UsuarioDTO.class);
     }
 }

@@ -16,7 +16,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 

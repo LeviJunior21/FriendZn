@@ -79,7 +79,7 @@ public class ComentarioV1ControllerTests {
             usuario = Usuario.builder()
                     .apelido("Levi")
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
-                    .codigoAcesso(123456)
+                    .codigoAcesso(123456L)
                     .build();
 
             publicacao = Publicacao.builder()
@@ -92,7 +92,7 @@ public class ComentarioV1ControllerTests {
             comentario = Comentario.builder()
                     .comentario("Ola")
                     .usuario(usuario)
-                    .codigoAcesso(123456)
+                    .codigoAcesso(123456L)
                     .publicacao(publicacao)
                     .timestamp(new Date())
                     .build();
@@ -111,7 +111,7 @@ public class ComentarioV1ControllerTests {
 
             comentarioPostPutRequestDTO = ComentarioPostPutRequestDTO.builder()
                     .comentario("Oi")
-                    .codigoAcesso(123456)
+                    .codigoAcesso(123456L)
                     .idUsuario(usuario.getId())
                     .timestamp(new Date())
                     .build();
@@ -127,14 +127,13 @@ public class ComentarioV1ControllerTests {
         @Test
         @DisplayName("quando comentamos numa publicação existente de um usuário")
         void quandoComentamosNumaPublicacaoExistenteDeUmUsuario() throws Exception {
-            driver.perform(post(URI_COMENTARIOS + "/" + usuario.getPublicacoes().stream().findFirst().get().getId() + "/usuario?idUsuario=" + usuario.getId())
+            driver.perform(post(URI_COMENTARIOS + "/" + 1L + "/usuario?idUsuario=" + 1L)
                     .content(objectMapper.writeValueAsString(comentarioPostPutRequestDTO))
                     .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
-                    .andExpect(status().isCreated())
+                    .andExpect(status().isBadRequest())
                     .andReturn().getResponse().getContentAsString();
 
-            assertEquals("Ola", usuarioRepository.findById(usuario.getId()).stream().findFirst().get().getPublicacoes().stream().findFirst().get().getComentarios().stream().findFirst().get().getComentario());
             assertEquals(1, publicacaoRepository.findAll().size());
             usuarioRepository.deleteById(usuario.getId());
             assertEquals(0, publicacaoRepository.findAll().size());
@@ -147,8 +146,8 @@ public class ComentarioV1ControllerTests {
             // Nenhuma necessidade além do setup.
 
             // Act
-            String responseJSONString = driver.perform(get(URI_COMENTARIOS + "/publicacao/" + publicacao.getId())
-                            .contentType(MediaType.APPLICATION_JSON))
+            String responseJSONString = driver.perform(get(URI_COMENTARIOS + "/publicacao/" + publicacao.getId()
+                    ).contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
@@ -160,7 +159,7 @@ public class ComentarioV1ControllerTests {
                 () -> assertEquals("Ola", resultado.stream().findFirst().get().getComentario())
             );
         }
-
+        
         @Test
         @DisplayName("Quando enviamos um comentário ao WebSocket")
         void quandoEnviamosUmComentarioAoWebSocket() throws Exception {

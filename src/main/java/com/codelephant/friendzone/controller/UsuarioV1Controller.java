@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 public class UsuarioV1Controller {
-
     @Autowired
     UsuarioCriarService usuarioCriarService;
     @Autowired

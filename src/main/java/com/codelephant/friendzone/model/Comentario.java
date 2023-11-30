@@ -3,18 +3,18 @@ package com.codelephant.friendzone.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
-@Entity
 @Data
+@Getter
+@Setter
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,7 +35,7 @@ public class Comentario {
 
     @JsonProperty("codigoAcesso")
     @Column(nullable = false)
-    private Integer codigoAcesso;
+    private Long codigoAcesso;
 
     @JsonProperty("publicacao")
     @ManyToOne(optional = false)
@@ -46,11 +46,13 @@ public class Comentario {
 
     @JsonProperty("gostaram")
     @OneToMany(cascade = CascadeType.ALL)
-    private Set<Usuario> gostaram;
+    @Builder.Default
+    private Set<Usuario> gostaram =  new HashSet<>();
 
     @JsonProperty("naoGostaram")
     @OneToMany(cascade = CascadeType.ALL)
-    private Set<Usuario> naoGostaram;
+    @Builder.Default
+    private Set<Usuario> naoGostaram = new HashSet<>();
 
     @JsonProperty("timestamp")
     private Date timestamp;

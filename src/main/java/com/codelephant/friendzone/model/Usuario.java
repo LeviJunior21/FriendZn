@@ -1,17 +1,20 @@
 package com.codelephant.friendzone.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Data
+@Entity
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -32,18 +35,29 @@ public class Usuario {
 
     @JsonProperty("codigoAcesso")
     @Column(nullable = false)
-    private Integer codigoAcesso;
+    private Long codigoAcesso;
 
     @JsonProperty("publicacoes")
     @OneToMany(cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<Publicacao> publicacoes;
+    @Builder.Default
+    private List<Publicacao> publicacoes = new ArrayList<>();
 
     @JsonProperty("gostaram")
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Comentario> gostaram;
+    @Builder.Default
+    private List<Comentario> gostaram = new ArrayList<>();
 
     @JsonProperty("naoGostaram")
     @OneToMany(cascade = CascadeType.ALL)
-    private List<Comentario> naoGostaram;
+    @Builder.Default
+    private List<Comentario> naoGostaram = new ArrayList<>();
+
+    @JsonProperty("publicacao")
+    @ManyToOne()
+    @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "publicacao_id", referencedColumnName = "id")
+    private Publicacao publicacao;
+
 }

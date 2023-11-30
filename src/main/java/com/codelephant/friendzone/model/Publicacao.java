@@ -6,15 +6,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
 @Data
+@Getter
+@Setter
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,9 +43,18 @@ public class Publicacao {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacao")
     @JsonManagedReference
     @JsonIgnore
-    private List<Comentario> comentarios;
+    @Builder.Default
+    private List<Comentario> comentarios = new ArrayList<>();
 
     @JsonProperty("categoria")
     @Column(nullable = false)
     private Categoria categoria;
+
+    @JsonProperty("interessados")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacao")
+    @JsonManagedReference
+    @JsonIgnore
+    @Builder.Default
+    @Column(nullable = false)
+    private List<Usuario> interessados = new ArrayList<>();
 }

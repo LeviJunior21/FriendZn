@@ -3,17 +3,15 @@ package com.codelephant.friendzone.dto.comentario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,11 +21,11 @@ public class ComentarioPostPutRequestDTO {
     private String comentario;
 
     @JsonProperty("codigoAcesso")
-    @Column(nullable = false)
-    private Integer codigoAcesso;
+    @NotNull(message = "O codigo de acesso nao pode ser null.")
+    private Long codigoAcesso;
 
     @JsonProperty("idUsuario")
-    @NotNull(message = "O id do usuario nao pode ser null")
+    @NotNull(message = "O id do usuario nao pode ser null.")
     private Long idUsuario;
 
     @JsonProperty("timestamp")

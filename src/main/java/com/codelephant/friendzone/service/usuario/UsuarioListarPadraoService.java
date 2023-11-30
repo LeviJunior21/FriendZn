@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UsuarioListarPadraoService implements UsuarioListarService {
-
     @Autowired
     UsuarioRepository usuarioRepository;
     @Autowired

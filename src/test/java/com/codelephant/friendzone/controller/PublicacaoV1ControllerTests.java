@@ -3,6 +3,8 @@ package com.codelephant.friendzone.controller;
 import com.codelephant.friendzone.dto.publicacao.PublicacaoDTO;
 import com.codelephant.friendzone.dto.publicacao.PublicacaoPostPutRequestDTO;
 import com.codelephant.friendzone.model.Publicacao;
+import com.codelephant.friendzone.service.publicacao.PublicacaoCriarService;
+import com.codelephant.friendzone.service.publicacao.PublicacaoListarSeguindoService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.codelephant.friendzone.exception.CustomErrorType;
 import com.codelephant.friendzone.model.Usuario;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -49,16 +52,22 @@ public class PublicacaoV1ControllerTests {
 
         @Autowired
         UsuarioRepository usuarioRepository;
+        @Autowired
+        PublicacaoCriarService publicacaoCriarService;
+        @Autowired
+        PublicacaoListarSeguindoService publicacaoListarSeguindoService;
+
 
         PublicacaoPostPutRequestDTO publicacaoPostPutRequestDTO;
         Usuario usuario;
+        Publicacao publicacao;
 
         @BeforeEach
         void setup() {
             objectMapper.registerModule(new JavaTimeModule());
             publicacaoPostPutRequestDTO = PublicacaoPostPutRequestDTO.builder()
                     .publicacao("Ola!")
-                    .codigoAcesso(123456)
+                    .codigoAcesso(123456L)
                     .date(new Date())
                     .categoria(Categoria.amizade)
                     .build();
@@ -66,7 +75,7 @@ public class PublicacaoV1ControllerTests {
             Usuario usuarioTemp = Usuario.builder()
                     .apelido("Levi")
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
-                    .codigoAcesso(123456)
+                    .codigoAcesso(123456L)
                     .publicacoes(new ArrayList<>())
                     .build();
 
@@ -96,16 +105,25 @@ public class PublicacaoV1ControllerTests {
             PublicacaoDTO publicacaoDTO = objectMapper.readValue(responseJSONString, PublicacaoDTO.class);
 
             // Assert
-            assertEquals(1, usuarioRepository.findAll().size());
-            assertEquals(1, usuarioRepository.findById(usuario.getId()).get().getPublicacoes().size());
-            assertEquals("Ola!", usuarioRepository.findById(usuario.getId()).get().getPublicacoes().stream().findFirst().get().getPublicacao());
-            assertEquals(1, publicacaoRepository.findAll().size());
-            assertEquals("Levi", publicacaoDTO.getUsuario().getApelido());
-            assertEquals("Ola!", publicacaoRepository.findAll().stream().findFirst().get().getPublicacao());
+            assertAll(
+                    ()-> assertEquals(1, usuarioRepository.findAll().size()),
+                    ()-> assertEquals(1, usuarioRepository.findById(usuario.getId()).get().getPublicacoes().size()),
+                    ()-> assertEquals("Ola!", usuarioRepository.findById(usuario.getId()).get().getPublicacoes().stream().findFirst().get().getPublicacao()),
+                    ()-> assertEquals(1, publicacaoRepository.findAll().size()),
+                    ()-> assertEquals("Levi", publicacaoDTO.getUsuario().getApelido()),
+                    ()-> assertEquals("Ola!", publicacaoRepository.findAll().stream().findFirst().get().getPublicacao())
+            );
+            System.out.println("Existe: " + publicacaoRepository.findAll().stream().filter
+                    (publicacao -> publicacao.getInteressados().stream()
+                            .anyMatch(usuario1 -> usuario1.getId()
+                                    .equals(publicacaoDTO.getUsuario().getId())
+                            )
+                    ).collect(Collectors.toList()).get(0).getInteressados().get(0).getApelido()
+            );
         }
 
         @Test
-        @DisplayName("Quando salvamos uma publicação para um usuário existente.")
+        @DisplayName("Quando listamos todas as publicações existentes.")
         void quandoListamosTodasAsPublicacoesExistentes() throws Exception {
             // Arrange
             publicacaoRepository.save(Publicacao.builder()
@@ -191,7 +209,7 @@ public class PublicacaoV1ControllerTests {
         @DisplayName("Quando salvamos uma publicação para um usuário válido mas código diferente.")
         void quandoSalvamosUmaPublicacaoParaUmUsuarioValidoMasCodigoDiferente() throws Exception {
             // Arrange
-            publicacaoPostPutRequestDTO.setCodigoAcesso(12346);
+            publicacaoPostPutRequestDTO.setCodigoAcesso(12346L);
 
             // Act
             String responseJSONString = driver.perform(post(URI_PUBLICACOES + "/publicacao?id=" + usuario.getId())
@@ -204,6 +222,16 @@ public class PublicacaoV1ControllerTests {
             // Assert
             CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
             assertEquals("O codigo de acesso eh diferente.", customErrorType.getMessage());
+        }
+
+        @Test
+        @DisplayName("Quando associamos uma publicação a ser interessada pelo usuário.")
+        void quandoAssociamosUmaPublicacaoASerInteressadaPeloUsuario() {
+            System.out.println("Antes de salvar: " + publicacaoRepository.findAll().size());
+            publicacaoCriarService.salvar(publicacaoPostPutRequestDTO, usuario.getId());
+            System.out.println("Depois de salvar: " + publicacaoRepository.findAll().size());
+            List<PublicacaoDTO> publicacaoDTOS = publicacaoListarSeguindoService.listar(usuario.getId());
+            System.out.println("Tamanho da lista de publicações interessadas pelo usuário:  " + publicacaoDTOS.size());
         }
     }
 }

@@ -5,14 +5,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,4 +40,5 @@ public class ChatPostPutRequestDTO {
         this.mensagem = chatPostPutRequestDTO.getMensagem();
         this.timestamp = chatPostPutRequestDTO.getTimestamp();
     }
+
 }

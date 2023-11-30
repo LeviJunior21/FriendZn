@@ -8,22 +8,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-
 @Service
 @Transactional
 public class UsuarioCriarPadraoService implements UsuarioCriarService {
-
     @Autowired
     UsuarioRepository usuarioRepository;
-
     @Autowired
     ModelMapper modelMapper;
 
     @Override
     public UsuarioDTO salvar(UsuarioPostPutRequestDTO usuarioPostPutRequestDTO) {
         Usuario usuario = modelMapper.map(usuarioPostPutRequestDTO, Usuario.class);
-        usuario.setPublicacoes(new ArrayList<>());
         Usuario usuarioSaved = usuarioRepository.save(usuario);
         UsuarioDTO usuarioDTO = modelMapper.map(usuarioSaved, UsuarioDTO.class);
         return usuarioDTO;

@@ -4,13 +4,14 @@ import com.codelephant.friendzone.model.Comentario;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.utils.Categoria;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

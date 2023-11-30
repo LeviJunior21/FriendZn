@@ -2,6 +2,7 @@ package com.codelephant.friendzone.controller;
 
 import com.codelephant.friendzone.dto.publicacao.PublicacaoPostPutRequestDTO;
 import com.codelephant.friendzone.service.publicacao.PublicacaoCriarService;
+import com.codelephant.friendzone.service.publicacao.PublicacaoListarSeguindoService;
 import com.codelephant.friendzone.service.publicacao.PublicacaoListarService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class PublicacaoV1Controller {
     PublicacaoCriarService publicacaoCriarService;
     @Autowired
     PublicacaoListarService publicacaoListarService;
+    @Autowired
+    PublicacaoListarSeguindoService publicacaoListarSeguindoService;
 
     @PostMapping("/publicacao")
     public ResponseEntity<?> salvarPublicacao(
@@ -42,5 +45,14 @@ public class PublicacaoV1Controller {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(publicacaoListarService.listar(null));
+    }
+
+    @GetMapping("/seguindo/{idUsuario}")
+    public ResponseEntity<?> publicacoesSeguidas(
+            @PathVariable Long idUsuario
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(publicacaoListarSeguindoService.listar(idUsuario));
     }
 }

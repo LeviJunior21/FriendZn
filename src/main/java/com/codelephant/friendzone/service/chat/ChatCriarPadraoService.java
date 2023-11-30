@@ -7,12 +7,12 @@ import com.codelephant.friendzone.model.Mensagem;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.ConversaRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
+import com.codelephant.friendzone.utils.busca.BuscarDado;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,49 +24,28 @@ public class ChatCriarPadraoService implements ChatCriarService {
     ModelMapper modelMapper;
     @Autowired
     UsuarioRepository usuarioRepository;
+    @Autowired
+    BuscarDado buscarDado;
 
     @Override
-    public Mensagem salvar(ChatPostPutRequestDTO mensagemPostPutRequestDTO) {
-        Usuario usuario1 = usuarioRepository.findById(mensagemPostPutRequestDTO.getRemetente()).orElseThrow(UsuarioNaoExisteException::new);
-        usuarioRepository.findById(mensagemPostPutRequestDTO.getReceptor()).orElseThrow(UsuarioNaoExisteException::new);
+    public ChatPostPutRequestDTO salvar(ChatPostPutRequestDTO chatPostPutRequestDTO) {
+        Usuario usuarioRemetente = usuarioRepository.findById(chatPostPutRequestDTO.getRemetente()).orElseThrow(UsuarioNaoExisteException::new);
+        Usuario usuariooReceptor = usuarioRepository.findById(chatPostPutRequestDTO.getReceptor()).orElseThrow(UsuarioNaoExisteException::new);
+        Mensagem mensagem = modelMapper.map(chatPostPutRequestDTO, Mensagem.class);
+        List<Conversa> conversasDoReceptor = conversaRepository.findByReceptor(usuariooReceptor.getId());
 
-        List<Conversa> conversas = conversaRepository.findByUserio1Id(usuario1.getId());
-        Conversa conversa = binarySearch(conversas, usuario1.getId(), 0, conversas.size() - 1);
-        Mensagem mensagem = modelMapper.map(mensagemPostPutRequestDTO, Mensagem.class);
+        // Busca as conversas do remetente nas conversas de quem vai receber a conversa.
+        Conversa conversaDoRemetente = buscarDado.binarySearchConversa(conversasDoReceptor, usuarioRemetente.getId(), 0, conversasDoReceptor.size() - 1);
 
-        if (conversa != null) {
-            conversa.getMensagens().add(mensagem);
-            conversaRepository.save(conversa);
-            return mensagem;
-        } else {
-            Conversa novaConversa = Conversa.builder()
-                    .idUsuario1(mensagemPostPutRequestDTO.getRemetente())
-                    .idUsuario2(mensagemPostPutRequestDTO.getReceptor())
-                    .mensagens(new ArrayList<>())
-                    .build();
-            mensagem.setConversa(conversa);
-            novaConversa.getMensagens().add(mensagem);
-            conversaRepository.save(novaConversa);
-            return mensagem;
-        }
-    }
-
-    private Conversa binarySearch(List<Conversa> conversas, Long idUsuario, int left, int right) {
-        if (left > right) {
-            return null;
-        }
-        int meio = (left + right) / 2;
-        Conversa conversa = conversas.get(meio);
-
-        if (conversa.getIdUsuario1().equals(idUsuario)) {
-            return conversa;
+        if (conversaDoRemetente != null) {
+            conversaDoRemetente.getMensagens().add(mensagem);
+            conversaRepository.save(conversaDoRemetente);
         }
 
-        if (idUsuario < conversa.getIdUsuario1()) {
-            return binarySearch(conversas, idUsuario, left, meio - 1);
-        }
-        else {
-            return binarySearch(conversas, idUsuario, meio + 1, right);
-        }
+        Conversa conversa = modelMapper.map(chatPostPutRequestDTO, Conversa.class);
+        mensagem.setConversa(conversa);
+        conversa.getMensagens().add(mensagem);
+        conversaRepository.save(conversa);
+        return chatPostPutRequestDTO;
     }
 }

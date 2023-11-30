@@ -2,16 +2,15 @@ package com.codelephant.friendzone.dto.publicacao;
 
 import com.codelephant.friendzone.utils.Categoria;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.util.Date;
 
 @Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,7 +25,7 @@ public class PublicacaoPostPutRequestDTO {
 
     @JsonProperty("codigoAcesso")
     @NotNull(message = "Codigo de acesso invaalido.")
-    private Integer codigoAcesso;
+    private Long codigoAcesso;
 
     @JsonProperty("categoria")
     @NotNull(message = "Categoria invalida.")

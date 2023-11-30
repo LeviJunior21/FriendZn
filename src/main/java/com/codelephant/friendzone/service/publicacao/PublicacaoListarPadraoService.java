@@ -1,11 +1,8 @@
 package com.codelephant.friendzone.service.publicacao;
 
 import com.codelephant.friendzone.dto.publicacao.PublicacaoDTO;
-import com.codelephant.friendzone.dto.usuario.UsuarioDTO;
 import com.codelephant.friendzone.exception.publicacao.PublicacaoNaoExisteException;
-import com.codelephant.friendzone.exception.usuario.UsuarioNaoExisteException;
 import com.codelephant.friendzone.model.Publicacao;
-import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +17,6 @@ public class PublicacaoListarPadraoService implements PublicacaoListarService {
 
     @Autowired
     PublicacaoRepository publicacaoRepository;
-
     @Autowired
     ModelMapper modelMapper;
 

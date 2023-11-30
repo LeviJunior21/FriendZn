@@ -48,12 +48,13 @@ func postPut(url string, jsonData []byte) {
 }
 
 func main() {
-	usuarios := "http://localhost:8080/v1/usuarios"
-	/**
+	usuarios := "http://localhost:8080/v1/usuarios"	
 	publicacoes := "http://localhost:8080/v1/publicacoes"
+
+	/**
 	comentarios := "http://localhost:8080/v1/comentarios"
 	**/
-	jsonUserData := []byte(`{"apelido": "Levi","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345}`)
+	jsonUserData := []byte(`{"apelido": "LeviJunior","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345}`)
 	fmt.Println("Criando usuário!")
 	postPut(usuarios, jsonUserData)
 
@@ -62,9 +63,15 @@ func main() {
 	fmt.Println("Resposta:", responseCriacaoUsuario)
 	
 	fmt.Println("\nCriando uma publicação para o usuário criado!")
-	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=3"
+	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=1"
+
 	jsonPostData := []byte(`{"publicacao": "Boa noite!","date": "2023-10-24T12:00:00Z","codigoAcesso": 12345, "categoria": "amizade"}`)
 	postPut(criarPublicacoes, jsonPostData)
+
+        fmt.Println("\nRecuperando publicacões seguidas do usuário criado:")
+        responseSeguindoUsuario := get(publicacoes + "/seguindo/2")
+        fmt.Println("Resposta:", responseSeguindoUsuario)
+
 	/**
 	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=1"
         jsonPostComentario := []byte(`{"comentario": "Olá pessoal!","codigoAcesso": 12345}`)
