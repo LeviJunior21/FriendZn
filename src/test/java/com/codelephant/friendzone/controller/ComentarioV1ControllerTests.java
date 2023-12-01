@@ -1,6 +1,8 @@
 package com.codelephant.friendzone.controller;
 
 import com.codelephant.friendzone.dto.comentario.ComentarioDTO;
+import com.codelephant.friendzone.dto.comentario.ComentarioGostarOuNaoDTO;
+import com.codelephant.friendzone.dto.comentario.ComentarioGostarOuNaoPostRequestDTO;
 import com.codelephant.friendzone.dto.comentario.ComentarioPostPutRequestDTO;
 import com.codelephant.friendzone.model.Comentario;
 import com.codelephant.friendzone.model.Publicacao;
@@ -22,6 +24,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.util.ArrayList;
@@ -71,6 +74,7 @@ public class ComentarioV1ControllerTests {
         private Comentario comentario;
         private AtomicReference<String> mensagemRecebida;
         private ComentarioPostPutRequestDTO comentarioPostPutRequestDTO;
+        private ComentarioGostarOuNaoPostRequestDTO comentarioGostarOuNaoPostRequestDTO;
 
         @BeforeEach
         void setup() {
@@ -114,6 +118,11 @@ public class ComentarioV1ControllerTests {
                     .codigoAcesso(123456L)
                     .idUsuario(usuario.getId())
                     .timestamp(new Date())
+                    .build();
+
+            comentarioGostarOuNaoPostRequestDTO = ComentarioGostarOuNaoPostRequestDTO.builder()
+                    .codigoAcesso(123456L)
+                    .idUsuario(usuario.getId())
                     .build();
         }
 
@@ -159,6 +168,48 @@ public class ComentarioV1ControllerTests {
                 () -> assertEquals("Ola", resultado.stream().findFirst().get().getComentario())
             );
         }
+
+        @Test
+        @DisplayName("Quando gostamos de um comentário")
+        void quandoGostamosDeUmComentarioExistente() throws Exception {
+            // Arrange
+            // Nnehuma necessidade além do setup.
+
+            // Act
+            driver.perform(post(URI_COMENTARIOS + "/gostar/publicacao/" + publicacao.getId() + "/comentario?id=" + comentario.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(comentarioGostarOuNaoPostRequestDTO)))
+                    .andExpect(status().isCreated())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            assertAll(
+                    () -> assertEquals(1, publicacaoRepository.findById(publicacao.getId()).get().getComentarios().stream().findFirst().get().getGostaram().size()),
+                    () -> assertEquals(0, publicacaoRepository.findById(publicacao.getId()).get().getComentarios().stream().findFirst().get().getNaoGostaram().size())
+            );
+        }
+
+        @Test
+        @DisplayName("Quando não gostamos de um comentário")
+        void quandoNaoGostamosDeUmComentarioExistente() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            driver.perform(post(URI_COMENTARIOS + "/nao-gostar/publicacao/" + publicacao.getId() + "/comentario?id=" + comentario.getId())
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(comentarioGostarOuNaoPostRequestDTO)))
+                    .andExpect(status().isCreated())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            assertAll(
+                    () -> assertEquals(1, publicacaoRepository.findById(publicacao.getId()).get().getComentarios().stream().findFirst().get().getNaoGostaram().size()),
+                    () -> assertEquals(0, publicacaoRepository.findById(publicacao.getId()).get().getComentarios().stream().findFirst().get().getGostaram().size())
+            );
+        }
         
         @Test
         @DisplayName("Quando enviamos um comentário ao WebSocket")
@@ -180,6 +231,47 @@ public class ComentarioV1ControllerTests {
             ComentarioDTO comentarioDTO = objectMapper.readValue(mensagemRecebida.get(), ComentarioDTO.class);
             assertAll(
                     () -> assertEquals(null, comentarioDTO.getComentario())
+            );
+        }
+
+        @Test
+        @DisplayName("Quando enviamos um comentário ao WebSocket")
+        void quandoGostamosDeComentarioAUsandoWebSocket() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            WSConfig comentarioWSConfig = WSConfig.builder()
+                    .webSocketStompClient(webSocketStompClient)
+                    .ws(getWsComentatarios())
+                    .subscribe("/topic/public/gostar-publicacao/" + publicacao.getId() + "/comentario/" + comentario.getId())
+                    .destination("/app/curtir-publicacao/"+ publicacao.getId() + "/comentario/" + comentario.getId() +"/gostar/1")
+                    .data(objectMapper.writeValueAsString(comentarioGostarOuNaoPostRequestDTO))
+                    .build();
+            comentarioWSConfig.runSendAndReceive(mensagemRecebida);
+
+            // Assert
+            ComentarioGostarOuNaoDTO comentarioGostarOuNaoDTO = objectMapper.readValue(mensagemRecebida.get(), ComentarioGostarOuNaoDTO.class);
+            assertAll(
+                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getGostou()),
+                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getNaoGostou())
+            );
+        }
+
+        @Test
+        @DisplayName("Quando buscamos pelas curtidas do comentario")
+        void quandoBuscamosPelasCurtidasDoUsuario() throws Exception {
+            String responseJSONString = driver.perform(get(URI_COMENTARIOS + "/publicacao/" + publicacao.getId() + "/comentario/" + comentario.getId())
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            ComentarioGostarOuNaoDTO comentarioGostarOuNaoDTO = objectMapper.readValue(responseJSONString, ComentarioGostarOuNaoDTO.class);
+
+            assertAll(
+                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getGostou()),
+                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getNaoGostou())
             );
         }
     }

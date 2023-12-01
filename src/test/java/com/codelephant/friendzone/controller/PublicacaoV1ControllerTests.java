@@ -113,13 +113,6 @@ public class PublicacaoV1ControllerTests {
                     ()-> assertEquals("Levi", publicacaoDTO.getUsuario().getApelido()),
                     ()-> assertEquals("Ola!", publicacaoRepository.findAll().stream().findFirst().get().getPublicacao())
             );
-            System.out.println("Existe: " + publicacaoRepository.findAll().stream().filter
-                    (publicacao -> publicacao.getInteressados().stream()
-                            .anyMatch(usuario1 -> usuario1.getId()
-                                    .equals(publicacaoDTO.getUsuario().getId())
-                            )
-                    ).collect(Collectors.toList()).get(0).getInteressados().get(0).getApelido()
-            );
         }
 
         @Test
@@ -233,5 +226,9 @@ public class PublicacaoV1ControllerTests {
             List<PublicacaoDTO> publicacaoDTOS = publicacaoListarSeguindoService.listar(usuario.getId());
             System.out.println("Tamanho da lista de publicações interessadas pelo usuário:  " + publicacaoDTOS.size());
         }
+
+        @Test
+        @DisplayName("Quando listamos as publicações interessadas pelo usuario.")
+        void quandoListamosAsPublicacoesInteressadasPeloUsuario() {}
     }
 }

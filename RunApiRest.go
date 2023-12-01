@@ -48,12 +48,10 @@ func postPut(url string, jsonData []byte) {
 }
 
 func main() {
-	usuarios := "http://localhost:8080/v1/usuarios"	
+	usuarios := "http://localhost:8080/v1/usuarios"
 	publicacoes := "http://localhost:8080/v1/publicacoes"
-
-	/**
 	comentarios := "http://localhost:8080/v1/comentarios"
-	**/
+
 	jsonUserData := []byte(`{"apelido": "LeviJunior","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345}`)
 	fmt.Println("Criando usuário!")
 	postPut(usuarios, jsonUserData)
@@ -61,7 +59,7 @@ func main() {
 	fmt.Println("\nRecuperando todos usuários criados:")
 	responseCriacaoUsuario := get(usuarios)
 	fmt.Println("Resposta:", responseCriacaoUsuario)
-	
+
 	fmt.Println("\nCriando uma publicação para o usuário criado!")
 	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=1"
 
@@ -69,13 +67,17 @@ func main() {
 	postPut(criarPublicacoes, jsonPostData)
 
         fmt.Println("\nRecuperando publicacões seguidas do usuário criado:")
-        responseSeguindoUsuario := get(publicacoes + "/seguindo/2")
+        responseSeguindoUsuario := get(publicacoes + "/seguindo/1")
         fmt.Println("Resposta:", responseSeguindoUsuario)
 
-	/**
 	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=1"
-        jsonPostComentario := []byte(`{"comentario": "Olá pessoal!","codigoAcesso": 12345}`)
+	jsonPostComentario := []byte(`{"comentario": "Olá pessoal!","codigoAcesso": 12345, "idUsuario": 1, "timestamp": "2023-10-24T12:00:00Z"}`)
         postPut(criarComentario, jsonPostComentario)
+
+	gostarComentario := "http://localhost:8080/v1/comentarios/gostar/publicacao/1/comentario?id=1"
+	jsonGostarComentario := []byte(`{"idUsuario": 1,"codigoAcesso": 12345}`)
+        fmt.Println("\nGostando de uma publicação")
+        postPut(gostarComentario, jsonGostarComentario)
 
 	fmt.Println("\nRecuperando todos usuários criados:")
 	responseCriacaoUsuario2 := get(usuarios)
@@ -88,6 +90,9 @@ func main() {
 	fmt.Println("\n\nRecuperando todas os comentarios da pulicacao feita")
         responseComentariosCriados := get(comentarios + "/publicacao/1 ")
         fmt.Println("Resposta:", responseComentariosCriados)
-	**/
+
+	fmt.Println("\nRecuperando publicacões seguidas do usuário criado:")
+        responseSeguindoUsuario2 := get(publicacoes + "/seguindo/1")
+        fmt.Println("Resposta:", responseSeguindoUsuario2)
 }
 

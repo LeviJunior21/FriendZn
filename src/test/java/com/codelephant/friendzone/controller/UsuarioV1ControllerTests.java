@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,8 +61,8 @@ public class UsuarioV1ControllerTests {
                     .codigoAcesso(123456L)
                     .apelido("Levi")
                     .publicacoes(new ArrayList<>())
-                    .gostaram(new ArrayList<>())
-                    .naoGostaram(new ArrayList<>())
+                    .gostaram(new HashSet<>())
+                    .naoGostaram(new HashSet<>())
                     .build();
 
             usuarioPostPutRequestDTO = UsuarioPostPutRequestDTO.builder()

@@ -9,7 +9,9 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -46,18 +48,17 @@ public class Usuario {
     @JsonProperty("gostaram")
     @OneToMany(cascade = CascadeType.ALL)
     @Builder.Default
-    private List<Comentario> gostaram = new ArrayList<>();
+    private Set<Comentario> gostaram = new HashSet<>();
 
     @JsonProperty("naoGostaram")
     @OneToMany(cascade = CascadeType.ALL)
     @Builder.Default
-    private List<Comentario> naoGostaram = new ArrayList<>();
+    private Set<Comentario> naoGostaram = new HashSet<>();
 
     @JsonProperty("publicacao")
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "publicacao_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Publicacao publicacao;
-
 }

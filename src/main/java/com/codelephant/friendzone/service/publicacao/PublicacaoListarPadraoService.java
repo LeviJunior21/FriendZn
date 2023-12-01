@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class PublicacaoListarPadraoService implements PublicacaoListarService {
-
     @Autowired
     PublicacaoRepository publicacaoRepository;
     @Autowired

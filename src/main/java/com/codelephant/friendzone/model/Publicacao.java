@@ -8,9 +8,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Data
 @Getter
@@ -51,10 +49,9 @@ public class Publicacao {
     private Categoria categoria;
 
     @JsonProperty("interessados")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacao")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacao", fetch = FetchType.LAZY)
     @JsonManagedReference
     @JsonIgnore
     @Builder.Default
-    @Column(nullable = false)
-    private List<Usuario> interessados = new ArrayList<>();
+    private Set<Usuario> interessados = new HashSet<>();
 }

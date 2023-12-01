@@ -6,7 +6,6 @@ import java.util.List;
 
 @Component
 public class BuscarDado {
-
     public Conversa binarySearchConversa(List<Conversa> conversas, Long idUsuario, int left, int right) {
         if (left > right) {
             return null;

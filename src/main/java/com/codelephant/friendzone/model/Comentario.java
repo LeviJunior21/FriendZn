@@ -47,7 +47,7 @@ public class Comentario {
     @JsonProperty("gostaram")
     @OneToMany(cascade = CascadeType.ALL)
     @Builder.Default
-    private Set<Usuario> gostaram =  new HashSet<>();
+    private Set<Usuario> gostaram = new HashSet<>();
 
     @JsonProperty("naoGostaram")
     @OneToMany(cascade = CascadeType.ALL)
