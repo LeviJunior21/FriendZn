@@ -1,6 +1,7 @@
 package com.codelephant.friendzone.controller;
 
 import com.codelephant.friendzone.dto.usuario.UsuarioDTO;
+import com.codelephant.friendzone.dto.usuario.UsuarioDescricaoPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
 import com.codelephant.friendzone.exception.CustomErrorType;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,6 +51,7 @@ public class UsuarioV1ControllerTests {
     class TestRestFull {
 
         UsuarioPostPutRequestDTO usuarioPostPutRequestDTO;
+        UsuarioDescricaoPutRequestDTO usuarioDescricaoPutRequestDTO;
         UsuarioValidarDTO usuarioValidarDTO;
         Usuario usuario;
 
@@ -77,6 +80,10 @@ public class UsuarioV1ControllerTests {
                     .codigoAcesso(123456L)
                     .build();
 
+            usuarioDescricaoPutRequestDTO = UsuarioDescricaoPutRequestDTO.builder()
+                    .codigoAcesso(123456L)
+                    .descricao("Nova descricao")
+                    .build();
             usuario = usuarioRepository.save(usuario);
         }
 
@@ -285,6 +292,66 @@ public class UsuarioV1ControllerTests {
             assertAll(
                 () -> assertEquals(usuario.getApelido(), usuarioDTO.getApelido())
             );
+        }
+
+        @Test
+        @DisplayName("QuandoAlteramosADescricaoDoUsuario")
+        void quandoAlteramosADescricaoDoUsuario() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            driver.perform(put(URI_USUARIOS + "/alterar-descricao/usuario?id=" + usuario.getId())
+                            .content(objectMapper.writeValueAsString(usuarioDescricaoPutRequestDTO))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            assertEquals(usuarioDescricaoPutRequestDTO.getDescricao(), usuarioRepository.findAll().stream().findFirst().get().getDescricao());
+        }
+
+        @Test
+        @DisplayName("QuandoAlteramosADescricaoDoUsuarioPorDescicaoVazia")
+        void quandoAlteramosADescricaoDoUsuarioPorDescricaoVazia() throws Exception {
+            // Arrange
+            usuarioDescricaoPutRequestDTO.setDescricao("");
+
+            // Act
+            String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-descricao/usuario?id=" + usuario.getId())
+                            .content(objectMapper.writeValueAsString(usuarioDescricaoPutRequestDTO))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+
+            // Assert
+            assertEquals("Descricao invalida, ela nao pode ser vazia.", customErrorType.getErrors().get(0));
+            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
+        }
+
+        @Test
+        @DisplayName("QuandoAlteramosADescricaoDoUsuarioPorDescicaoNula")
+        void quandoAlteramosADescricaoDoUsuarioPorDescricaoNula() throws Exception {
+            // Arrange
+            usuarioDescricaoPutRequestDTO.setDescricao(null);
+
+            // Act
+            String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-descricao/usuario?id=" + usuario.getId())
+                            .content(objectMapper.writeValueAsString(usuarioDescricaoPutRequestDTO))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andReturn().getResponse().getContentAsString();
+
+            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
+
+            // Assert
+            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
+            assertEquals("Descricao invalida, ela nao pode ser nula.", customErrorType.getErrors().get(0));
         }
     }
 }

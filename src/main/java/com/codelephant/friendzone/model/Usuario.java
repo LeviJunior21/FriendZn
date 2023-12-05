@@ -61,4 +61,8 @@ public class Usuario {
     @JoinColumn(name = "publicacao_id", referencedColumnName = "id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Publicacao publicacao;
+
+    @JsonProperty("descricao")
+    @Builder.Default
+    private String descricao = "";
 }

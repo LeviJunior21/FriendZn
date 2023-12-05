@@ -35,7 +35,7 @@ public class ChatCriarPadraoService implements ChatCriarService {
         List<Conversa> conversasDoReceptor = conversaRepository.findByReceptor(usuariooReceptor.getId());
 
         // Busca as conversas do remetente nas conversas de quem vai receber a conversa.
-        Conversa conversaDoRemetente = buscarDado.binarySearchConversa(conversasDoReceptor, usuarioRemetente.getId(), 0, conversasDoReceptor.size() - 1);
+        Conversa conversaDoRemetente = buscarDado.buscarConversa(conversasDoReceptor, usuarioRemetente.getId(), 0, conversasDoReceptor.size() - 1);
 
         if (conversaDoRemetente != null) {
             conversaDoRemetente.getMensagens().add(mensagem);

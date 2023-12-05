@@ -6,7 +6,7 @@ import java.util.List;
 
 @Component
 public class BuscarDado {
-    public Conversa binarySearchConversa(List<Conversa> conversas, Long idUsuario, int left, int right) {
+    public Conversa buscarConversa(List<Conversa> conversas, Long idUsuario, int left, int right) {
         if (left > right) {
             return null;
         }
@@ -18,10 +18,10 @@ public class BuscarDado {
         }
 
         if (idUsuario < conversa.getRemetente()) {
-            return binarySearchConversa(conversas, idUsuario, left, meio - 1);
+            return buscarConversa(conversas, idUsuario, left, meio - 1);
         }
         else {
-            return binarySearchConversa(conversas, idUsuario, meio + 1, right);
+            return buscarConversa(conversas, idUsuario, meio + 1, right);
         }
     }
 }

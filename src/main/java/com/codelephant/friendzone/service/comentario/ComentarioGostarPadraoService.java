@@ -35,8 +35,12 @@ public class ComentarioGostarPadraoService implements ComentarioGostarService {
                 .filter(comentario -> comentario.getId().equals(idComentario))
                 .findFirst().orElseThrow(ComentarioNaoExisteException::new);
 
-        comentarioBuscado.getGostaram().add(usuario);
-        comentarioBuscado.getNaoGostaram().remove(usuario);
+        if (!comentarioBuscado.getGostaram().contains(usuario)) {
+            comentarioBuscado.getGostaram().add(usuario);
+        }
+        if (comentarioBuscado.getNaoGostaram().contains(usuario)) {
+            comentarioBuscado.getNaoGostaram().remove(usuario);
+        }
 
         publicacaoRepository.save(publicacao);
 

@@ -53,25 +53,32 @@ func main() {
 	comentarios := "http://localhost:8080/v1/comentarios"
 
 	jsonUserData := []byte(`{"apelido": "LeviJunior","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345}`)
-	fmt.Println("Criando usuário!")
+	fmt.Println("Criando o primeiro usuário!")
 	postPut(usuarios, jsonUserData)
+
+	jsonUserData2 := []byte(`{"apelido": "AnaClara","email": "anaclara@gmail.com","codigoAcesso": 12345}`)
+        fmt.Println("Criando o segundo usuário!")
+        postPut(usuarios, jsonUserData2)
 
 	fmt.Println("\nRecuperando todos usuários criados:")
 	responseCriacaoUsuario := get(usuarios)
 	fmt.Println("Resposta:", responseCriacaoUsuario)
 
-	fmt.Println("\nCriando uma publicação para o usuário criado!")
-	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=1"
+	fmt.Println("\nCriando uma publicação para o primeiro usuário criado!")
 
-	jsonPostData := []byte(`{"publicacao": "Boa noite!","date": "2023-10-24T12:00:00Z","codigoAcesso": 12345, "categoria": "amizade"}`)
+	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=2"
+	jsonPostData := []byte(`{"publicacao": "Bom dia!","date": "2023-10-24T12:00:00Z","codigoAcesso": 12345, "categoria": "amizade"}`)
 	postPut(criarPublicacoes, jsonPostData)
 
         fmt.Println("\nRecuperando publicacões seguidas do usuário criado:")
+
         responseSeguindoUsuario := get(publicacoes + "/seguindo/1")
         fmt.Println("Resposta:", responseSeguindoUsuario)
 
-	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=1"
-	jsonPostComentario := []byte(`{"comentario": "Olá pessoal!","codigoAcesso": 12345, "idUsuario": 1, "timestamp": "2023-10-24T12:00:00Z"}`)
+	fmt.Println("Criando um comentário para a publicação criada.")
+
+	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=2"
+	jsonPostComentario := []byte(`{"comentario": "Bom dia, amiga!","codigoAcesso": 12345, "idUsuario": 2, "timestamp": "2023-10-24T12:00:00Z"}`)
         postPut(criarComentario, jsonPostComentario)
 
 	gostarComentario := "http://localhost:8080/v1/comentarios/gostar/publicacao/1/comentario?id=1"

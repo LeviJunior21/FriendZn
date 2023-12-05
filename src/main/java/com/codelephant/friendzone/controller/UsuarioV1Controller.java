@@ -1,11 +1,9 @@
 package com.codelephant.friendzone.controller;
 
+import com.codelephant.friendzone.dto.usuario.UsuarioDescricaoPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
-import com.codelephant.friendzone.service.usuario.UsuarioCriarService;
-import com.codelephant.friendzone.service.usuario.UsuarioExistenciaService;
-import com.codelephant.friendzone.service.usuario.UsuarioListarService;
-import com.codelephant.friendzone.service.usuario.UsuarioValidarService;
+import com.codelephant.friendzone.service.usuario.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +25,8 @@ public class UsuarioV1Controller {
     UsuarioValidarService usuarioValidarService;
     @Autowired
     UsuarioExistenciaService usuarioExistenciaService;
+    @Autowired
+    UsuarioAlterarDescricaoService usuarioAlterarDescricaoService;
 
     @PostMapping()
     public ResponseEntity<?> salvarUsuario(
@@ -69,4 +69,14 @@ public class UsuarioV1Controller {
                 .body(usuarioListarService.listar(id).get(0));
     }
 
+    @PutMapping("/alterar-descricao/usuario")
+    public ResponseEntity<?> alterarDescricao(
+            @RequestParam Long id,
+            @RequestBody @Valid UsuarioDescricaoPutRequestDTO usuarioDescricaoPutRequestDTO
+    ) {
+      usuarioAlterarDescricaoService.alterarDescricao(usuarioDescricaoPutRequestDTO, id);
+      return ResponseEntity
+              .status(HttpStatus.OK)
+              .body("");
+    }
 }
