@@ -55,4 +55,4 @@ Código base gerado via [start.sprint.io](https://start.spring.io/#!type=maven-p
 
 ## Contato e Dúvidas
 
-levi.pereira.junior@ccc.ufcg.edu.br
+- levi.pereira.junior@ccc.ufcg.edu.br
