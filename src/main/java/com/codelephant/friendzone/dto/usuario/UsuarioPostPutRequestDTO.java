@@ -1,5 +1,6 @@
 package com.codelephant.friendzone.dto.usuario;
 
+import com.codelephant.friendzone.model.LoginType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,4 +24,12 @@ public class UsuarioPostPutRequestDTO {
     @JsonProperty("codigoAcesso")
     @NotNull(message = "Codigo de acesso invalido.")
     private Long codigoAcesso;
+
+    @JsonProperty("loginType")
+    @NotNull(message = "Tipo de login invalido.")
+    private LoginType loginType;
+
+    @JsonProperty("idAuth")
+    @NotNull(message = "Id de autenticacao invalido.")
+    private Long idAuth;
 }

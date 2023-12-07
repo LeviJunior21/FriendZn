@@ -65,4 +65,12 @@ public class Usuario {
     @JsonProperty("descricao")
     @Builder.Default
     private String descricao = "";
+
+    @JsonProperty("idAuth")
+    @Column(nullable = false)
+    private Long idAuth;
+
+    @JsonProperty("tipoLogin")
+    @Column(nullable = false)
+    private LoginType loginType;
 }

@@ -2,6 +2,7 @@ package com.codelephant.friendzone.controller;
 
 import com.codelephant.friendzone.dto.publicacao.PublicacaoDTO;
 import com.codelephant.friendzone.dto.publicacao.PublicacaoPostPutRequestDTO;
+import com.codelephant.friendzone.model.LoginType;
 import com.codelephant.friendzone.model.Publicacao;
 import com.codelephant.friendzone.service.publicacao.PublicacaoCriarService;
 import com.codelephant.friendzone.service.publicacao.PublicacaoListarSeguindoService;
@@ -29,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -77,6 +77,8 @@ public class PublicacaoV1ControllerTests {
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
                     .codigoAcesso(123456L)
                     .publicacoes(new ArrayList<>())
+                    .loginType(LoginType.GitHub)
+                    .idAuth(111L)
                     .build();
 
             usuario = usuarioRepository.save(usuarioTemp);

@@ -5,6 +5,7 @@ import com.codelephant.friendzone.dto.usuario.UsuarioDescricaoPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
 import com.codelephant.friendzone.exception.CustomErrorType;
+import com.codelephant.friendzone.model.LoginType;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
@@ -65,6 +66,8 @@ public class UsuarioV1ControllerTests {
                     .apelido("Levi")
                     .publicacoes(new ArrayList<>())
                     .gostaram(new HashSet<>())
+                    .idAuth(1111L)
+                    .loginType(LoginType.GitHub)
                     .naoGostaram(new HashSet<>())
                     .build();
 
@@ -72,6 +75,8 @@ public class UsuarioV1ControllerTests {
                     .apelido("Levi")
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
                     .codigoAcesso(123456L)
+                    .loginType(LoginType.GitHub)
+                    .idAuth(1111L)
                     .build();
 
             usuarioValidarDTO = UsuarioValidarDTO.builder()
@@ -351,7 +356,45 @@ public class UsuarioV1ControllerTests {
 
             // Assert
             assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
-            assertEquals("Descricao invalida, ela nao pode ser nula.", customErrorType.getErrors().get(0));
+            assertEquals("Descricao invalida, ela nao pode ser vazia.", customErrorType.getErrors().get(0));
+        }
+
+        @Test
+        @DisplayName("Quando verificamos a existencia do usuario com o ID do Github.")
+        void quandoVerificamosAExistenciaDoUsuarioComIdGithub() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            String responseJSONString = driver.perform(get(URI_USUARIOS + "/github?idAuth=" + usuario.getIdAuth())
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            Boolean result = objectMapper.readValue(responseJSONString, Boolean.class);
+
+            // Assert
+            assertEquals(true, result);
+        }
+
+        @Test
+        @DisplayName("Quando verificamos a existencia do usuario com o ID do Github.")
+        void quandoVerificamosAInexistenciaDoUsuarioComIdGithub() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            String responseJSONString = driver.perform(get(URI_USUARIOS + "/github?idAuth=" + 10L)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            Boolean result = objectMapper.readValue(responseJSONString, Boolean.class);
+
+            // Assert
+            assertEquals(false, result);
         }
     }
 }

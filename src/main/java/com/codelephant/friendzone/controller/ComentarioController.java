@@ -41,24 +41,30 @@ public class ComentarioController {
         }
     }
 
-    @MessageMapping("/curtir-publicacao/{idPublicacao}/comentario/{idComentario}/gostar/{gostar}")
-    @SendTo("/topic/public/gostar-publicacao/{idPublicacao}/comentario/{idComentario}")
+    @MessageMapping("/curtir-comentario/publicacao/{idPublicacao}/comentario/{idComentario}")
     public ComentarioGostarOuNaoDTO gostarComentario(
             @Payload ComentarioGostarOuNaoPostRequestDTO comentarioGostarOuNaoPostRequestDTO,
             @DestinationVariable Long idPublicacao,
-            @DestinationVariable Long idComentario,
-            @DestinationVariable Integer gostar
+            @DestinationVariable Long idComentario
     ){
+        ComentarioGostarOuNaoDTO comentarioGostarOuNaoDTO = ComentarioGostarOuNaoDTO.builder().gostou(0).naoGostou(0).build();
         try {
-            ComentarioGostarOuNaoDTO comentarioGostarOuNaoDTO;
-            if (gostar.equals(1)) {
-                comentarioGostarOuNaoDTO = comentarioGostarService.gostar(comentarioGostarOuNaoPostRequestDTO, idPublicacao, idComentario);
+            if (comentarioGostarOuNaoPostRequestDTO.getGostar().equals(1L)) {
+                comentarioGostarOuNaoDTO = comentarioGostarService.gostar(
+                        comentarioGostarOuNaoPostRequestDTO,
+                        comentarioGostarOuNaoPostRequestDTO.getIdPublicacao(),
+                        comentarioGostarOuNaoPostRequestDTO.getIdComentario()
+                );
             } else {
-                comentarioGostarOuNaoDTO = comentarioNaoGostarService.naoGostar(comentarioGostarOuNaoPostRequestDTO, idPublicacao, idComentario);
+                comentarioGostarOuNaoDTO = comentarioNaoGostarService.naoGostar(
+                        comentarioGostarOuNaoPostRequestDTO,
+                        comentarioGostarOuNaoPostRequestDTO.getIdPublicacao(),
+                        comentarioGostarOuNaoPostRequestDTO.getIdComentario()
+                );
             }
-            return comentarioGostarOuNaoDTO;
-        } catch (Exception e) {
-            return ComentarioGostarOuNaoDTO.builder().gostou(0).naoGostou(0).build();
-        }
+        } catch(Exception e) {}
+
+        simpMessagingTemplate.convertAndSend("/topic/public/publicacao/" + idPublicacao + "/comentario/" + idComentario, comentarioGostarOuNaoDTO);
+        return comentarioGostarOuNaoDTO;
     }
 }

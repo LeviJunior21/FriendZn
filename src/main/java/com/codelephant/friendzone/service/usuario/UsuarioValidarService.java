@@ -1,9 +1,8 @@
 package com.codelephant.friendzone.service.usuario;
 
-import com.codelephant.friendzone.dto.usuario.UsuarioDTO;
-import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
+import com.codelephant.friendzone.model.LoginType;
 
 @FunctionalInterface
 public interface UsuarioValidarService {
-    UsuarioDTO validarInformacoes(UsuarioValidarDTO usuarioValidarDTO);
+    boolean validarIdAuth(Long idGithub, LoginType loginType);
 }

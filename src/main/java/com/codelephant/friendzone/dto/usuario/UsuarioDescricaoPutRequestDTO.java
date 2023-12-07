@@ -14,7 +14,6 @@ import lombok.*;
 public class UsuarioDescricaoPutRequestDTO {
     @JsonProperty("descricao")
     @NotEmpty(message = "Descricao invalida, ela nao pode ser vazia.")
-    @NotNull(message = "Descricao invalida, ela nao pode ser nula.")
     private String descricao;
 
     @JsonProperty("codigoAcesso")

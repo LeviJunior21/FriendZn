@@ -3,6 +3,7 @@ package com.codelephant.friendzone.controller;
 import com.codelephant.friendzone.dto.usuario.UsuarioDescricaoPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
+import com.codelephant.friendzone.model.LoginType;
 import com.codelephant.friendzone.service.usuario.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class UsuarioV1Controller {
     UsuarioValidarService usuarioValidarService;
     @Autowired
     UsuarioExistenciaService usuarioExistenciaService;
+    @Autowired
+    UsuarioValidarInformacoesService usuarioValidarInformacoesService;
     @Autowired
     UsuarioAlterarDescricaoService usuarioAlterarDescricaoService;
 
@@ -50,7 +53,7 @@ public class UsuarioV1Controller {
     ) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(usuarioValidarService.validarInformacoes(usuarioValidarDTO));
+                .body(usuarioValidarInformacoesService.validarInformacoes(usuarioValidarDTO));
     }
 
     @GetMapping("/validar/usuario")
@@ -78,5 +81,23 @@ public class UsuarioV1Controller {
       return ResponseEntity
               .status(HttpStatus.OK)
               .body("");
+    }
+
+    @GetMapping("/github")
+    public ResponseEntity<?> verificarExistenciaGithub(
+            @RequestParam Long idAuth
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usuarioValidarService.validarIdAuth(idAuth, LoginType.GitHub));
+    }
+
+    @GetMapping("/google")
+    public ResponseEntity<?> verificarExistenciaGoogle(
+            @RequestParam Long idAuth
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usuarioValidarService.validarIdAuth(idAuth, LoginType.Google));
     }
 }

@@ -5,6 +5,7 @@ import com.codelephant.friendzone.dto.comentario.ComentarioGostarOuNaoDTO;
 import com.codelephant.friendzone.dto.comentario.ComentarioGostarOuNaoPostRequestDTO;
 import com.codelephant.friendzone.dto.comentario.ComentarioPostPutRequestDTO;
 import com.codelephant.friendzone.model.Comentario;
+import com.codelephant.friendzone.model.LoginType;
 import com.codelephant.friendzone.model.Publicacao;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.ComentarioRepository;
@@ -84,6 +85,8 @@ public class ComentarioV1ControllerTests {
                     .apelido("Levi")
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
                     .codigoAcesso(123456L)
+                    .idAuth(1111L)
+                    .loginType(LoginType.GitHub)
                     .build();
 
             publicacao = Publicacao.builder()
@@ -123,6 +126,9 @@ public class ComentarioV1ControllerTests {
             comentarioGostarOuNaoPostRequestDTO = ComentarioGostarOuNaoPostRequestDTO.builder()
                     .codigoAcesso(123456L)
                     .idUsuario(usuario.getId())
+                    .idPublicacao(1L)
+                    .idComentario(1L)
+                    .gostar(1L)
                     .build();
         }
 
@@ -235,8 +241,8 @@ public class ComentarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando enviamos um comentário ao WebSocket")
-        void quandoGostamosDeComentarioAUsandoWebSocket() throws Exception {
+        @DisplayName("Quando gostamos comentario usando WebSocket.")
+        void quandoGostamosDoComentarioUsandoWebSocket() throws Exception {
             // Arrange
             // Nenhuma necessidade além do setup
 
@@ -244,8 +250,8 @@ public class ComentarioV1ControllerTests {
             WSConfig comentarioWSConfig = WSConfig.builder()
                     .webSocketStompClient(webSocketStompClient)
                     .ws(getWsComentatarios())
-                    .subscribe("/topic/public/gostar-publicacao/" + publicacao.getId() + "/comentario/" + comentario.getId())
-                    .destination("/app/curtir-publicacao/"+ publicacao.getId() + "/comentario/" + comentario.getId() +"/gostar/1")
+                    .destination("/app/curtir-comentario/publicacao/" + publicacao.getId() + "/comentario/" + comentario.getId())
+                    .subscribe("/topic/public/publicacao/" + publicacao.getId() + "/comentario/" + comentario.getId())
                     .data(objectMapper.writeValueAsString(comentarioGostarOuNaoPostRequestDTO))
                     .build();
             comentarioWSConfig.runSendAndReceive(mensagemRecebida);

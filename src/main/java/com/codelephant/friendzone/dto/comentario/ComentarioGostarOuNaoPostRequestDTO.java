@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 
 @Data
 @Getter
@@ -14,17 +15,27 @@ import lombok.*;
 @NoArgsConstructor
 public class ComentarioGostarOuNaoPostRequestDTO {
     @JsonProperty("idUsuario")
-    @NotNull(message = "ID do usuario eh invalido.")
     private Long idUsuario;
 
     @JsonProperty("codigoAcesso")
-    @NotNull(message = "Codigo de Acesso Invalido")
     private Long codigoAcesso;
+
+    @JsonProperty("idPublicacao")
+    private Long idPublicacao;
+
+    @JsonProperty("idComentario")
+    private Long idComentario;
+
+    @JsonProperty("gostar")
+    private Long gostar;
 
     public ComentarioGostarOuNaoPostRequestDTO(String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ComentarioGostarOuNaoPostRequestDTO requestDTO = objectMapper.readValue(json, ComentarioGostarOuNaoPostRequestDTO.class);
         this.idUsuario = requestDTO.getIdUsuario();
         this.codigoAcesso = requestDTO.getCodigoAcesso();
+        this.idPublicacao = requestDTO.getIdPublicacao();
+        this.idComentario = requestDTO.getIdComentario();
+        this.gostar = requestDTO.getGostar();
     }
 }
