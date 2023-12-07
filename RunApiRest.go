@@ -52,11 +52,11 @@ func main() {
 	publicacoes := "http://localhost:8080/v1/publicacoes"
 	comentarios := "http://localhost:8080/v1/comentarios"
 
-	jsonUserData := []byte(`{"apelido": "LeviJunior","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345}`)
+	jsonUserData := []byte(`{"apelido": "LeviJunior","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345, "idAuth": 1111, "loginType": "GitHub"}`)
 	fmt.Println("Criando o primeiro usuário!")
 	postPut(usuarios, jsonUserData)
 
-	jsonUserData2 := []byte(`{"apelido": "AnaClara","email": "anaclara@gmail.com","codigoAcesso": 12345}`)
+	jsonUserData2 := []byte(`{"apelido": "AnaClara","email": "anaclara@gmail.com","codigoAcesso": 12345, "idAuth": 1111, "loginType": "GitHub"}`)
         fmt.Println("Criando o segundo usuário!")
         postPut(usuarios, jsonUserData2)
 
