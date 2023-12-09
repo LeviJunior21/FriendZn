@@ -30,6 +30,8 @@ public class UsuarioV1Controller {
     UsuarioValidarInformacoesService usuarioValidarInformacoesService;
     @Autowired
     UsuarioAlterarDescricaoService usuarioAlterarDescricaoService;
+    @Autowired
+    UsuarioGetByIdGitHubService usuarioGetByIdGitHubService;
 
     @PostMapping()
     public ResponseEntity<?> salvarUsuario(
@@ -99,5 +101,14 @@ public class UsuarioV1Controller {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioValidarService.validarIdAuth(idAuth, LoginType.Google));
+    }
+
+    @GetMapping("/github/{idAuth}")
+    public ResponseEntity<?> getUSuario(
+            @PathVariable Long idAuth
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usuarioGetByIdGitHubService.getIDServer(idAuth));
     }
 }

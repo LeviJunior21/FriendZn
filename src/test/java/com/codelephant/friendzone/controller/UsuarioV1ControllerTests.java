@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -395,6 +396,25 @@ public class UsuarioV1ControllerTests {
 
             // Assert
             assertEquals(false, result);
+        }
+
+        @Test
+        @DisplayName("Quando buscamos um usuário pelo ID do Auth do GitHub")
+        void quandoBuscamosUmUsuarioPeloIDDoAuthDoGitHub() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            String responseJSONString = driver.perform(get(URI_USUARIOS + "/github/" + usuario.getIdAuth())
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            Long usuarioID = objectMapper.readValue(responseJSONString, Long.class);
+
+            // Assert
+            assertEquals(usuario.getId(), usuarioID);
         }
     }
 }
