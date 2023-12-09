@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -415,6 +416,23 @@ public class UsuarioV1ControllerTests {
 
             // Assert
             assertEquals(usuario.getId(), usuarioID);
+        }
+
+        @Test
+        @DisplayName("Quando deletamos o usuário do banco de dados.")
+        void quandoDeletamosOUsuarioDobancoDeDados() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup.
+
+            // Act
+            driver.perform(delete(URI_USUARIOS + "/id/" + usuario.getId())
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+                    .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            assertEquals(0, usuarioRepository.findAll().size());
         }
     }
 }

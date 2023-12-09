@@ -32,6 +32,8 @@ public class UsuarioV1Controller {
     UsuarioAlterarDescricaoService usuarioAlterarDescricaoService;
     @Autowired
     UsuarioGetByIdGitHubService usuarioGetByIdGitHubService;
+    @Autowired
+    UsuarioDeletarService usuarioDeletarService;
 
     @PostMapping()
     public ResponseEntity<?> salvarUsuario(
@@ -110,5 +112,15 @@ public class UsuarioV1Controller {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioGetByIdGitHubService.getIDServer(idAuth));
+    }
+
+    @DeleteMapping("/id/{idUsuario}")
+    public ResponseEntity<?> deletarUsuario(
+            @PathVariable Long idUsuario
+    ) {
+        usuarioDeletarService.deletar(idUsuario);
+        return ResponseEntity
+               .status(HttpStatus.OK)
+               .body("");
     }
 }
