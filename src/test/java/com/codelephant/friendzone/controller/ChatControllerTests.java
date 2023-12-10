@@ -1,6 +1,8 @@
 package com.codelephant.friendzone.controller;
 
 import com.codelephant.friendzone.dto.chat.ChatPostPutRequestDTO;
+import com.codelephant.friendzone.model.Chat;
+import com.codelephant.friendzone.repository.ChatRepository;
 import com.codelephant.friendzone.utils.WSConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -30,6 +32,8 @@ public class ChatControllerTests {
     private ObjectMapper objectMapper;
     @Autowired
     private WebSocketStompClient webSocketStompClient;
+    @Autowired
+    ChatRepository chatRepository;
     @LocalServerPort
     private int port;
     ChatPostPutRequestDTO chatPostPutRequestDTO;
@@ -50,6 +54,14 @@ public class ChatControllerTests {
                 .remetente(1L)
                 .receptor(2L)
                 .build();
+
+        Chat chat = Chat.builder()
+                .id(1L)
+                .mensagem("Oi")
+                .remetente(1L)
+                .receptor(2L)
+                .build();
+        chatRepository.save(chat);
     }
 
     @Test
@@ -82,5 +94,4 @@ public class ChatControllerTests {
                 () -> assertEquals(chatPostPutRequestDTO.getMensagem(), chatTeste.getMensagem())
         );
     }
-
 }

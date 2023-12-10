@@ -60,6 +60,6 @@ public class WSReceive implements Runnable {
     }
 
     public Integer getTimeOutAndIncrement(Integer value) {
-        return this.timeOut * 100 + value;
+        return this.timeOut * 1000 + value;
     }
 }
