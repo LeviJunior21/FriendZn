@@ -46,12 +46,12 @@ public class Usuario {
     private List<Publicacao> publicacoes = new ArrayList<>();
 
     @JsonProperty("gostaram")
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @Builder.Default
     private Set<Comentario> gostaram = new HashSet<>();
 
     @JsonProperty("naoGostaram")
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @Builder.Default
     private Set<Comentario> naoGostaram = new HashSet<>();
 
