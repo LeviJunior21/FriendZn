@@ -1,7 +1,9 @@
 package com.codelephant.friendzone.service.publicacao;
 
 import com.codelephant.friendzone.dto.publicacao.PublicacaoDTO;
+import com.codelephant.friendzone.exception.usuario.UsuarioNaoExisteException;
 import com.codelephant.friendzone.model.Publicacao;
+import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
@@ -24,9 +26,8 @@ public class PublicacaoListarSeguindoPadraoService implements PublicacaoListarSe
 
     @Override
     public List<PublicacaoDTO> listar(Long idUsuario) {
-        List<Publicacao> publicacoesInteressadas = publicacaoRepository.findPublicacoesByUsuarioInteressado(idUsuario);
-        return publicacoesInteressadas.stream().map(
-                publicacao -> modelMapper.map(publicacao, PublicacaoDTO.class))
-                .collect(Collectors.toList());
+        Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
+        List<Publicacao> publicacoesInteressadas = publicacaoRepository.findAll().stream().filter(publicacao -> publicacao.getInteressados().contains(usuario)).collect(Collectors.toList());
+        return publicacoesInteressadas.stream().map(publicacao -> modelMapper.map(publicacao, PublicacaoDTO.class)).collect(Collectors.toList());
     }
 }

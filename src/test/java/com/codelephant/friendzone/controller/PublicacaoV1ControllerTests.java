@@ -27,9 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -82,6 +80,20 @@ public class PublicacaoV1ControllerTests {
                     .build();
 
             usuario = usuarioRepository.save(usuarioTemp);
+
+            Set<Usuario> interessados = new HashSet<>();
+            interessados.add(usuario);
+            publicacaoRepository.save(
+                    Publicacao.builder()
+                            .id(10L)
+                            .date(new Date())
+                            .categoria(Categoria.amizade)
+                            .usuario(usuario)
+                            .publicacao("Ola!")
+                            .interessados(interessados)
+                            .comentarios(new ArrayList<>())
+                            .build()
+            );
         }
 
         @AfterEach
@@ -111,7 +123,7 @@ public class PublicacaoV1ControllerTests {
                     ()-> assertEquals(1, usuarioRepository.findAll().size()),
                     ()-> assertEquals(1, usuarioRepository.findById(usuario.getId()).get().getPublicacoes().size()),
                     ()-> assertEquals("Ola!", usuarioRepository.findById(usuario.getId()).get().getPublicacoes().stream().findFirst().get().getPublicacao()),
-                    ()-> assertEquals(1, publicacaoRepository.findAll().size()),
+                    ()-> assertEquals(2, publicacaoRepository.findAll().size()),
                     ()-> assertEquals("Levi", publicacaoDTO.getUsuario().getApelido()),
                     ()-> assertEquals("Ola!", publicacaoRepository.findAll().stream().findFirst().get().getPublicacao())
             );
@@ -139,7 +151,7 @@ public class PublicacaoV1ControllerTests {
                     .andReturn().getResponse().getContentAsString();
 
             List<PublicacaoDTO> resultado = objectMapper.readValue(responseJSONString, new TypeReference<List<PublicacaoDTO>>() {});
-            assertEquals(1, resultado.size());
+            assertEquals(2, resultado.size());
         }
 
         @Test
@@ -220,17 +232,24 @@ public class PublicacaoV1ControllerTests {
         }
 
         @Test
-        @DisplayName("Quando associamos uma publicação a ser interessada pelo usuário.")
-        void quandoAssociamosUmaPublicacaoASerInteressadaPeloUsuario() {
-            System.out.println("Antes de salvar: " + publicacaoRepository.findAll().size());
-            publicacaoCriarService.salvar(publicacaoPostPutRequestDTO, usuario.getId());
-            System.out.println("Depois de salvar: " + publicacaoRepository.findAll().size());
-            List<PublicacaoDTO> publicacaoDTOS = publicacaoListarSeguindoService.listar(usuario.getId());
-            System.out.println("Tamanho da lista de publicações interessadas pelo usuário:  " + publicacaoDTOS.size());
-        }
-
-        @Test
         @DisplayName("Quando listamos as publicações interessadas pelo usuario.")
-        void quandoListamosAsPublicacoesInteressadasPeloUsuario() {}
+        void quandoListamosAsPublicacoesInteressadasPeloUsuario() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            String responseJSONString = driver.perform(get(URI_PUBLICACOES + "/seguindo/" + usuario.getId())
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            Set<Publicacao> publicacoes = objectMapper.readValue(responseJSONString, new TypeReference<HashSet<Publicacao>>() {});
+
+            // Assert
+            assertAll(
+                    () -> assertEquals(1, publicacoes.size())
+            );
+        }
     }
 }

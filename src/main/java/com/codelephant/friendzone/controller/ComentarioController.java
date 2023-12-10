@@ -16,6 +16,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
+
 @Controller
 public class ComentarioController {
     @Autowired
@@ -47,7 +49,10 @@ public class ComentarioController {
             @DestinationVariable Long idPublicacao,
             @DestinationVariable Long idComentario
     ){
-        ComentarioGostarOuNaoDTO comentarioGostarOuNaoDTO = ComentarioGostarOuNaoDTO.builder().gostou(0).naoGostou(0).build();
+        ComentarioGostarOuNaoDTO comentarioGostarOuNaoDTO = ComentarioGostarOuNaoDTO.builder()
+                .gostou(new ArrayList<>())
+                .naoGostou(new ArrayList<>())
+                .build();
         try {
             if (comentarioGostarOuNaoPostRequestDTO.getGostar().equals(1L)) {
                 comentarioGostarOuNaoDTO = comentarioGostarService.gostar(

@@ -76,7 +76,7 @@ public class ChatControllerTests {
                 .build();
         wsConfig.runSendAndReceive(mensagemRecebida);
 
-        ChatPostPutRequestDTO chatTeste = objectMapper.readValue(mensagemRecebida.get(),ChatPostPutRequestDTO.class);
+        ChatPostPutRequestDTO chatTeste = objectMapper.readValue(mensagemRecebida.get(), ChatPostPutRequestDTO.class);
 
         assertAll(
                 () -> assertEquals(chatPostPutRequestDTO.getMensagem(), chatTeste.getMensagem())

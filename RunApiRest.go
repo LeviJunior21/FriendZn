@@ -77,9 +77,9 @@ func main() {
 
 	fmt.Println("Criando um comentário para a publicação criada.")
 
-	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=2"
-	jsonPostComentario := []byte(`{"comentario": "Bom dia, amiga!","codigoAcesso": 12345, "idUsuario": 2, "timestamp": "2023-10-24T12:00:00Z"}`)
-        postPut(criarComentario, jsonPostComentario)
+	//criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=2"
+	//jsonPostComentario := []byte(`{"comentario": "Bom dia, amiga!","codigoAcesso": 12345, "idUsuario": 2, "timestamp": "2023-10-24T12:00:00Z"}`)
+        //postPut(criarComentario, jsonPostComentario)
 
 	gostarComentario := "http://localhost:8080/v1/comentarios/gostar/publicacao/1/comentario?id=1"
 	jsonGostarComentario := []byte(`{"idUsuario": 1,"codigoAcesso": 12345}`)

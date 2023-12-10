@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface PublicacaoRepository extends JpaRepository<Publicacao, Long> {
 
-    @Query("SELECT p FROM Publicacao p JOIN p.interessados u WHERE u.id = :usuarioId")
+    @Query("SELECT p FROM Publicacao p INNER JOIN FETCH p.interessados u WHERE u.id = :usuarioId")
     List<Publicacao> findPublicacoesByUsuarioInteressado(@Param("usuarioId") Long usuarioId);
 }

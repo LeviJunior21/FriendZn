@@ -259,8 +259,8 @@ public class ComentarioV1ControllerTests {
             // Assert
             ComentarioGostarOuNaoDTO comentarioGostarOuNaoDTO = objectMapper.readValue(mensagemRecebida.get(), ComentarioGostarOuNaoDTO.class);
             assertAll(
-                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getGostou()),
-                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getNaoGostou())
+                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getGostou().size()),
+                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getNaoGostou().size())
             );
         }
 
@@ -276,8 +276,8 @@ public class ComentarioV1ControllerTests {
             ComentarioGostarOuNaoDTO comentarioGostarOuNaoDTO = objectMapper.readValue(responseJSONString, ComentarioGostarOuNaoDTO.class);
 
             assertAll(
-                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getGostou()),
-                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getNaoGostou())
+                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getGostou().size()),
+                    () -> assertEquals(0, comentarioGostarOuNaoDTO.getNaoGostou().size())
             );
         }
     }
