@@ -4,10 +4,7 @@ import com.codelephant.friendzone.dto.comentario.ComentarioDTO;
 import com.codelephant.friendzone.dto.comentario.ComentarioGostarOuNaoDTO;
 import com.codelephant.friendzone.dto.comentario.ComentarioGostarOuNaoPostRequestDTO;
 import com.codelephant.friendzone.dto.comentario.ComentarioPostPutRequestDTO;
-import com.codelephant.friendzone.model.Comentario;
-import com.codelephant.friendzone.model.LoginType;
-import com.codelephant.friendzone.model.Publicacao;
-import com.codelephant.friendzone.model.Usuario;
+import com.codelephant.friendzone.model.*;
 import com.codelephant.friendzone.repository.ComentarioRepository;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
@@ -86,6 +83,8 @@ public class ComentarioV1ControllerTests {
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
                     .codigoAcesso(123456L)
                     .idAuth(1111L)
+                    .idade(22)
+                    .sexo(SexoSelecionado.MASCULINO)
                     .loginType(LoginType.GitHub)
                     .build();
 

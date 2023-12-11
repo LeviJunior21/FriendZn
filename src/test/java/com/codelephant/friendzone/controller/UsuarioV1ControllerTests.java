@@ -6,6 +6,7 @@ import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
 import com.codelephant.friendzone.exception.CustomErrorType;
 import com.codelephant.friendzone.model.LoginType;
+import com.codelephant.friendzone.model.SexoSelecionado;
 import com.codelephant.friendzone.model.Usuario;
 import com.codelephant.friendzone.repository.PublicacaoRepository;
 import com.codelephant.friendzone.repository.UsuarioRepository;
@@ -68,6 +69,8 @@ public class UsuarioV1ControllerTests {
                     .apelido("Levi")
                     .publicacoes(new ArrayList<>())
                     .gostaram(new HashSet<>())
+                    .idade(22)
+                    .sexo(SexoSelecionado.MASCULINO)
                     .idAuth(1111L)
                     .loginType(LoginType.GitHub)
                     .naoGostaram(new HashSet<>())
@@ -78,6 +81,8 @@ public class UsuarioV1ControllerTests {
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
                     .codigoAcesso(123456L)
                     .loginType(LoginType.GitHub)
+                    .idade(22)
+                    .sexo(SexoSelecionado.MASCULINO)
                     .idAuth(1111L)
                     .build();
 

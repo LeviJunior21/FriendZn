@@ -31,6 +31,14 @@ public class Usuario {
     @Column(nullable = false)
     private String apelido;
 
+    @JsonProperty("idade")
+    @Column(nullable = false)
+    private Integer idade;
+
+    @JsonProperty("sexo")
+    @Column(nullable = false)
+    private SexoSelecionado sexo;
+
     @JsonProperty("email")
     @Column(nullable = false)
     private String email;

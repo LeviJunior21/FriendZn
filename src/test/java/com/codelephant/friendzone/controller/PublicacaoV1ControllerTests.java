@@ -4,6 +4,7 @@ import com.codelephant.friendzone.dto.publicacao.PublicacaoDTO;
 import com.codelephant.friendzone.dto.publicacao.PublicacaoPostPutRequestDTO;
 import com.codelephant.friendzone.model.LoginType;
 import com.codelephant.friendzone.model.Publicacao;
+import com.codelephant.friendzone.model.SexoSelecionado;
 import com.codelephant.friendzone.service.publicacao.PublicacaoCriarService;
 import com.codelephant.friendzone.service.publicacao.PublicacaoListarSeguindoService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -76,6 +77,8 @@ public class PublicacaoV1ControllerTests {
                     .codigoAcesso(123456L)
                     .publicacoes(new ArrayList<>())
                     .loginType(LoginType.GitHub)
+                    .idade(22)
+                    .sexo(SexoSelecionado.MASCULINO)
                     .idAuth(111L)
                     .build();
 
