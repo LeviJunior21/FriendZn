@@ -8,10 +8,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -76,4 +73,9 @@ public class Usuario {
     @JsonProperty("tipoLogin")
     @Column(nullable = false)
     private LoginType loginType;
+
+    @JsonProperty("date")
+    @Column(nullable = false)
+    @Builder.Default
+    private Date date = new Date();
 }

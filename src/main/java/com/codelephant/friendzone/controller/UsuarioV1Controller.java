@@ -1,6 +1,6 @@
 package com.codelephant.friendzone.controller;
 
-import com.codelephant.friendzone.dto.usuario.UsuarioDescricaoPutRequestDTO;
+import com.codelephant.friendzone.dto.usuario.UsuarioApelidoDescricaoPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
 import com.codelephant.friendzone.model.LoginType;
@@ -29,11 +29,13 @@ public class UsuarioV1Controller {
     @Autowired
     UsuarioValidarInformacoesService usuarioValidarInformacoesService;
     @Autowired
-    UsuarioAlterarDescricaoService usuarioAlterarDescricaoService;
+    UsuarioAlterarApelidoDescricaoService usuarioAlterarDescricaoService;
     @Autowired
     UsuarioGetByIdGitHubService usuarioGetByIdGitHubService;
     @Autowired
     UsuarioDeletarService usuarioDeletarService;
+    @Autowired
+    UsuarioPerfilService usuarioPerfilService;
 
     @PostMapping()
     public ResponseEntity<?> salvarUsuario(
@@ -76,10 +78,10 @@ public class UsuarioV1Controller {
                 .body(usuarioListarService.listar(id).get(0));
     }
 
-    @PutMapping("/alterar-descricao/usuario")
+    @PutMapping("/alterar-apelido-descricao/usuario")
     public ResponseEntity<?> alterarDescricao(
             @RequestParam Long id,
-            @RequestBody @Valid UsuarioDescricaoPutRequestDTO usuarioDescricaoPutRequestDTO
+            @RequestBody @Valid UsuarioApelidoDescricaoPutRequestDTO usuarioDescricaoPutRequestDTO
     ) {
       usuarioAlterarDescricaoService.alterarDescricao(usuarioDescricaoPutRequestDTO, id);
       return ResponseEntity
@@ -122,5 +124,14 @@ public class UsuarioV1Controller {
         return ResponseEntity
                .status(HttpStatus.OK)
                .body("");
+    }
+
+    @GetMapping("/perfil/{id}")
+    public ResponseEntity<?> getPerfil(
+            @PathVariable Long id
+    ) {
+       return ResponseEntity
+               .status(HttpStatus.OK)
+               .body(usuarioPerfilService.buscar(id));
     }
 }

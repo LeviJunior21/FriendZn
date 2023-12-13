@@ -254,27 +254,5 @@ public class PublicacaoV1ControllerTests {
             );
         }
 
-        /**
-        @Test
-        @DisplayName("Quando listamos as publicações de um usuário específico.")
-        void quandoListamosAsPublicacoesDeUmUsuarioEspscifico() throws Exception {
-            // Arrange
-            // Nenhuma necessidade além do setup
-
-            // Act
-            String responseJSONString = driver.perform(get(URI_PUBLICACOES + "/usuario/" + usuario.getId())
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn().getResponse().getContentAsString();
-
-            List<Publicacao> publicacoes = objectMapper.readValue(responseJSONString, new TypeReference<List<Publicacao>>() {});
-
-            // Assert
-            assertAll(
-                    () -> assertEquals(1, publicacoes.size()),
-                    () -> assertEquals(publicacao.getUsuario().getApelido() , publicacoes.stream().findFirst().get().getUsuario().getApelido())
-            );
-        }**/
     }
 }

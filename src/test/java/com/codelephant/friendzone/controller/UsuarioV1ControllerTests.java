@@ -1,9 +1,6 @@
 package com.codelephant.friendzone.controller;
 
-import com.codelephant.friendzone.dto.usuario.UsuarioDTO;
-import com.codelephant.friendzone.dto.usuario.UsuarioDescricaoPutRequestDTO;
-import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
-import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
+import com.codelephant.friendzone.dto.usuario.*;
 import com.codelephant.friendzone.exception.CustomErrorType;
 import com.codelephant.friendzone.model.LoginType;
 import com.codelephant.friendzone.model.SexoSelecionado;
@@ -20,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -55,7 +51,7 @@ public class UsuarioV1ControllerTests {
     class TestRestFull {
 
         UsuarioPostPutRequestDTO usuarioPostPutRequestDTO;
-        UsuarioDescricaoPutRequestDTO usuarioDescricaoPutRequestDTO;
+        UsuarioApelidoDescricaoPutRequestDTO usuarioDescricaoPutRequestDTO;
         UsuarioValidarDTO usuarioValidarDTO;
         Usuario usuario;
 
@@ -90,7 +86,7 @@ public class UsuarioV1ControllerTests {
                     .codigoAcesso(123456L)
                     .build();
 
-            usuarioDescricaoPutRequestDTO = UsuarioDescricaoPutRequestDTO.builder()
+            usuarioDescricaoPutRequestDTO = UsuarioApelidoDescricaoPutRequestDTO.builder()
                     .codigoAcesso(123456L)
                     .descricao("Nova descricao")
                     .build();
@@ -269,7 +265,7 @@ public class UsuarioV1ControllerTests {
             // Nenhuma necessidade além do setup
 
             // Act
-            driver.perform(put(URI_USUARIOS + "/alterar-descricao/usuario?id=" + usuario.getId())
+            driver.perform(put(URI_USUARIOS + "/alterar-apelido-descricao/usuario?id=" + usuario.getId())
                             .content(objectMapper.writeValueAsString(usuarioDescricaoPutRequestDTO))
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
@@ -287,7 +283,7 @@ public class UsuarioV1ControllerTests {
             usuarioDescricaoPutRequestDTO.setDescricao("");
 
             // Act
-            String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-descricao/usuario?id=" + usuario.getId())
+            String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-apelido-descricao/usuario?id=" + usuario.getId())
                             .content(objectMapper.writeValueAsString(usuarioDescricaoPutRequestDTO))
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
@@ -308,7 +304,7 @@ public class UsuarioV1ControllerTests {
             usuarioDescricaoPutRequestDTO.setDescricao(null);
 
             // Act
-            String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-descricao/usuario?id=" + usuario.getId())
+            String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-apelido-descricao/usuario?id=" + usuario.getId())
                             .content(objectMapper.writeValueAsString(usuarioDescricaoPutRequestDTO))
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
@@ -394,6 +390,25 @@ public class UsuarioV1ControllerTests {
 
             // Assert
             assertEquals(0, usuarioRepository.findAll().size());
+        }
+
+        @Test
+        @DisplayName("Quando buscamos o perdil do usuário pelo ID")
+        void quandoBuscamosOPerdilDoUsuarioPeloID() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            String responseJSONString = driver.perform(get(URI_USUARIOS + "/perfil/" + usuario.getId())
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            UsuarioPerfilDTO usuarioPerfilDTO = objectMapper.readValue(responseJSONString, UsuarioPerfilDTO.class);
+
+            // Assert
+            assertEquals(usuario.getApelido(), usuarioPerfilDTO.getApelido());
         }
     }
 }
