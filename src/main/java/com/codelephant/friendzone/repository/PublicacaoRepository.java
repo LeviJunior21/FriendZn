@@ -13,4 +13,7 @@ public interface PublicacaoRepository extends JpaRepository<Publicacao, Long> {
 
     @Query("SELECT p FROM Publicacao p INNER JOIN FETCH p.interessados u WHERE u.id = :usuarioId")
     List<Publicacao> findPublicacoesByUsuarioInteressado(@Param("usuarioId") Long usuarioId);
+
+    @Query("SELECT p FROM Publicacao p WHERE p.usuario.id = :id")
+    List<Publicacao> findByIdUser(@Param("id") Long id);
 }

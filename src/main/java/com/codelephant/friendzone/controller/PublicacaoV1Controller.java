@@ -4,6 +4,7 @@ import com.codelephant.friendzone.dto.publicacao.PublicacaoPostPutRequestDTO;
 import com.codelephant.friendzone.service.publicacao.PublicacaoCriarService;
 import com.codelephant.friendzone.service.publicacao.PublicacaoListarSeguindoService;
 import com.codelephant.friendzone.service.publicacao.PublicacaoListarService;
+import com.codelephant.friendzone.service.publicacao.PublicacaoUsuarioEspecificoListarService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,8 @@ public class PublicacaoV1Controller {
     PublicacaoListarService publicacaoListarService;
     @Autowired
     PublicacaoListarSeguindoService publicacaoListarSeguindoService;
+    @Autowired
+    PublicacaoUsuarioEspecificoListarService publicacaoUsuarioEspecificoListarService;
 
     @PostMapping("/publicacao")
     public ResponseEntity<?> salvarPublicacao(
@@ -40,11 +43,13 @@ public class PublicacaoV1Controller {
                 .body(publicacaoListarService.listar(null));
     }
 
-    @GetMapping("/publicacao")
-    public ResponseEntity<?> listarUmaPublicacoes() {
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<?> listarUmaPublicacoes(
+            @PathVariable Long id
+    ) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(publicacaoListarService.listar(null));
+                .body(publicacaoUsuarioEspecificoListarService.listar(id));
     }
 
     @GetMapping("/seguindo/{idUsuario}")
