@@ -82,7 +82,6 @@ public class ComentarioV1ControllerTests {
                     .apelido("Levi")
                     .email("levi.pereira.junior@ccc.ufcg.edu.br")
                     .codigoAcesso(123456L)
-                    .idAuth(1111L)
                     .idade(22)
                     .sexo(SexoSelecionado.MASCULINO)
                     .loginType(LoginType.GitHub)

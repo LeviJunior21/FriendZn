@@ -71,7 +71,6 @@ public class UsuarioV1ControllerTests {
                     .gostaram(new HashSet<>())
                     .idade(22)
                     .sexo(SexoSelecionado.MASCULINO)
-                    .idAuth(1111L)
                     .loginType(LoginType.GitHub)
                     .naoGostaram(new HashSet<>())
                     .build();
@@ -83,7 +82,6 @@ public class UsuarioV1ControllerTests {
                     .loginType(LoginType.GitHub)
                     .idade(22)
                     .sexo(SexoSelecionado.MASCULINO)
-                    .idAuth(1111L)
                     .build();
 
             usuarioValidarDTO = UsuarioValidarDTO.builder()
@@ -167,48 +165,6 @@ public class UsuarioV1ControllerTests {
             // Assert
             assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
             assertEquals("Apelido invalido.", customErrorType.getErrors().get(0));
-        }
-
-        @Test
-        @DisplayName("Quando tentamos salvar um usuário com o email vazio.")
-        void quandoSalvamosUmUsuarioComEmailVazio() throws Exception {
-            // Arrange
-            usuarioPostPutRequestDTO.setEmail("");
-
-            // Act
-            String responseJSONString = driver.perform(post(URI_USUARIOS)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(usuarioPostPutRequestDTO)))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString();
-
-            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
-
-            // Assert
-            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
-            assertEquals("Email invalido.", customErrorType.getErrors().get(0));
-        }
-
-        @Test
-        @DisplayName("Quando tentamos salvar um usuário com o email null.")
-        void quandoSalvamosUmUsuarioComEmailNull() throws Exception {
-            // Arrange
-            usuarioPostPutRequestDTO.setEmail(null);
-
-            // Act
-            String responseJSONString = driver.perform(post(URI_USUARIOS)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(usuarioPostPutRequestDTO)))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString();
-
-            CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
-
-            // Assert
-            assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
-            assertEquals("Email invalido.", customErrorType.getErrors().get(0));
         }
 
         @Test
@@ -373,7 +329,7 @@ public class UsuarioV1ControllerTests {
             // Nenhuma necessidade além do setup
 
             // Act
-            String responseJSONString = driver.perform(get(URI_USUARIOS + "/github?idAuth=" + usuario.getIdAuth())
+            String responseJSONString = driver.perform(get(URI_USUARIOS + "/github?idAuth=" + usuario.getCodigoAcesso())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isOk())
@@ -411,16 +367,16 @@ public class UsuarioV1ControllerTests {
             // Nenhuma necessidade além do setup
 
             // Act
-            String responseJSONString = driver.perform(get(URI_USUARIOS + "/github/" + usuario.getIdAuth())
+            String responseJSONString = driver.perform(get(URI_USUARIOS + "/github/" + usuario.getCodigoAcesso())
                     .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
 
-            Long usuarioID = objectMapper.readValue(responseJSONString, Long.class);
+            UsuarioDTO usuarioDTO = objectMapper.readValue(responseJSONString, UsuarioDTO.class);
 
             // Assert
-            assertEquals(usuario.getId(), usuarioID);
+            assertEquals(usuario.getId(), usuarioDTO.getId());
         }
 
         @Test

@@ -1,6 +1,8 @@
 package com.codelephant.friendzone.service.usuario;
 
+import com.codelephant.friendzone.dto.usuario.UsuarioDTO;
+
 @FunctionalInterface
 public interface UsuarioGetByIdGitHubService {
-    Long getIDServer(Long idAuth);
+    UsuarioDTO getIDServer(Long idAuth);
 }

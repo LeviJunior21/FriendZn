@@ -52,11 +52,11 @@ func main() {
 	publicacoes := "http://localhost:8080/v1/publicacoes"
 	comentarios := "http://localhost:8080/v1/comentarios"
 
-	jsonUserData := []byte(`{"apelido": "LeviJunior","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345, "idAuth": 1111, "loginType": "GitHub"}`)
+	jsonUserData := []byte(`{"apelido": "LeviJunior","email": "levi.pereira.junior@ccc.ufcg.edu.br","codigoAcesso": 12345, "loginType": "GitHub", "idade": 22, "sexo": "MASCULINO"}`)
 	fmt.Println("Criando o primeiro usuário!")
 	postPut(usuarios, jsonUserData)
 
-	jsonUserData2 := []byte(`{"apelido": "AnaClara","email": "anaclara@gmail.com","codigoAcesso": 12345, "idAuth": 1111, "loginType": "GitHub"}`)
+	jsonUserData2 := []byte(`{"apelido": "AnaClara","email": "anaclara@gmail.com","codigoAcesso": 12345, "loginType": "GitHub", "idade": 22, "sexo": "FEMININO"}`)
         fmt.Println("Criando o segundo usuário!")
         postPut(usuarios, jsonUserData2)
 
@@ -66,7 +66,7 @@ func main() {
 
 	fmt.Println("\nCriando uma publicação para o primeiro usuário criado!")
 
-	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=2"
+	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=1"
 	jsonPostData := []byte(`{"publicacao": "Bom dia!","date": "2023-10-24T12:00:00Z","codigoAcesso": 12345, "categoria": "amizade"}`)
 	postPut(criarPublicacoes, jsonPostData)
 
@@ -77,9 +77,9 @@ func main() {
 
 	fmt.Println("Criando um comentário para a publicação criada.")
 
-	//criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=2"
-	//jsonPostComentario := []byte(`{"comentario": "Bom dia, amiga!","codigoAcesso": 12345, "idUsuario": 2, "timestamp": "2023-10-24T12:00:00Z"}`)
-        //postPut(criarComentario, jsonPostComentario)
+	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=1"
+	jsonPostComentario := []byte(`{"comentario": "Bom dia, amiga!","codigoAcesso": 12345, "idUsuario": 2, "timestamp": "2023-10-24T12:00:00Z"}`)
+        postPut(criarComentario, jsonPostComentario)
 
 	gostarComentario := "http://localhost:8080/v1/comentarios/gostar/publicacao/1/comentario?id=1"
 	jsonGostarComentario := []byte(`{"idUsuario": 1,"codigoAcesso": 12345}`)

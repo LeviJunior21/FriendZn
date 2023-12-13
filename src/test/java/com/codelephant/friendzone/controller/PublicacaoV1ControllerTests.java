@@ -79,7 +79,6 @@ public class PublicacaoV1ControllerTests {
                     .loginType(LoginType.GitHub)
                     .idade(22)
                     .sexo(SexoSelecionado.MASCULINO)
-                    .idAuth(111L)
                     .build();
 
             usuario = usuarioRepository.save(usuarioTemp);

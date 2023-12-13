@@ -17,7 +17,7 @@ public class UsuarioValidarPadraoService implements UsuarioValidarService {
         boolean result = false;
         try {
             Usuario usuario = usuarioRepository.findByIdAuth(idGithub, loginType).orElseThrow(UsuarioNaoExisteException::new);
-            if (usuario.getIdAuth().equals(idGithub)) {
+            if (usuario.getCodigoAcesso().equals(idGithub)) {
                 result = true;
             }
         } catch (Exception e) {}

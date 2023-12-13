@@ -28,7 +28,6 @@ public class UsuarioPostPutRequestDTO {
     private SexoSelecionado sexo;
 
     @JsonProperty("email")
-    @NotBlank(message = "Email invalido.")
     private String email;
 
     @JsonProperty("codigoAcesso")
@@ -38,8 +37,4 @@ public class UsuarioPostPutRequestDTO {
     @JsonProperty("loginType")
     @NotNull(message = "Tipo de login invalido.")
     private LoginType loginType;
-
-    @JsonProperty("idAuth")
-    @NotNull(message = "Id de autenticacao invalido.")
-    private Long idAuth;
 }
