@@ -89,6 +89,7 @@ public class UsuarioV1ControllerTests {
             usuarioDescricaoPutRequestDTO = UsuarioApelidoDescricaoPutRequestDTO.builder()
                     .codigoAcesso(123456L)
                     .descricao("Nova descricao")
+                    .apelido("Levi")
                     .build();
             usuario = usuarioRepository.save(usuario);
         }
@@ -277,10 +278,10 @@ public class UsuarioV1ControllerTests {
         }
 
         @Test
-        @DisplayName("QuandoAlteramosADescricaoDoUsuarioPorDescicaoVazia")
-        void quandoAlteramosADescricaoDoUsuarioPorDescricaoVazia() throws Exception {
+        @DisplayName("QuandoAlteramosOApeldioDoUsuarioPorApelidoVazio")
+        void quandoAlteramosOApelidoDoUsuarioPorApelidoVazio() throws Exception {
             // Arrange
-            usuarioDescricaoPutRequestDTO.setDescricao("");
+            usuarioDescricaoPutRequestDTO.setApelido("");
 
             // Act
             String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-apelido-descricao/usuario?id=" + usuario.getId())
@@ -293,15 +294,15 @@ public class UsuarioV1ControllerTests {
             CustomErrorType customErrorType = objectMapper.readValue(responseJSONString, CustomErrorType.class);
 
             // Assert
-            assertEquals("Descricao invalida, ela nao pode ser vazia.", customErrorType.getErrors().get(0));
+            assertEquals("Apelido invalido, ele nao pode ser vazio.", customErrorType.getErrors().get(0));
             assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
         }
 
         @Test
-        @DisplayName("QuandoAlteramosADescricaoDoUsuarioPorDescicaoNula")
-        void quandoAlteramosADescricaoDoUsuarioPorDescricaoNula() throws Exception {
+        @DisplayName("QuandoAlteramosOApelidoDoUsuarioPorApelidoNula")
+        void quandoAlteramosOApelidoDoUsuarioPorApelidoNulo() throws Exception {
             // Arrange
-            usuarioDescricaoPutRequestDTO.setDescricao(null);
+            usuarioDescricaoPutRequestDTO.setApelido(null);
 
             // Act
             String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-apelido-descricao/usuario?id=" + usuario.getId())
@@ -315,7 +316,7 @@ public class UsuarioV1ControllerTests {
 
             // Assert
             assertEquals("Erros de validacao encontrados", customErrorType.getMessage());
-            assertEquals("Descricao invalida, ela nao pode ser vazia.", customErrorType.getErrors().get(0));
+            assertEquals("Apelido invalido, ele nao pode ser vazio.", customErrorType.getErrors().get(0));
         }
 
         @Test

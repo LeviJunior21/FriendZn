@@ -23,6 +23,7 @@ public class UsuarioAlterarApelidoDescricaoPadraoService implements UsuarioAlter
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
         validarCodigoAcesso.validar(usuario.getCodigoAcesso(), usuarioDescricaoPutRequestDTO.getCodigoAcesso());
         usuario.setDescricao(usuarioDescricaoPutRequestDTO.getDescricao());
+        usuario.setApelido(usuarioDescricaoPutRequestDTO.getApelido());
         usuarioRepository.save(usuario);
     }
 }

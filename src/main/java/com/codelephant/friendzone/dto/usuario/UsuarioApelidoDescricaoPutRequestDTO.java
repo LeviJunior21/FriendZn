@@ -13,10 +13,10 @@ import lombok.*;
 @NoArgsConstructor
 public class UsuarioApelidoDescricaoPutRequestDTO {
     @JsonProperty("apelido")
+    @NotEmpty(message = "Apelido invalido, ele nao pode ser vazio.")
     private String apelido;
 
     @JsonProperty("descricao")
-    @NotEmpty(message = "Descricao invalida, ela nao pode ser vazia.")
     private String descricao;
 
     @JsonProperty("codigoAcesso")
