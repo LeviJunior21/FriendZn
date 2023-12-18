@@ -78,4 +78,8 @@ public class Usuario {
     @Column(nullable = false)
     @Builder.Default
     private Date date = new Date();
+
+    @JsonProperty("emoji")
+    @Builder.Default
+    private String emoji = "";
 }

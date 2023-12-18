@@ -51,7 +51,8 @@ public class UsuarioV1ControllerTests {
     class TestRestFull {
 
         UsuarioPostPutRequestDTO usuarioPostPutRequestDTO;
-        UsuarioApelidoDescricaoPutRequestDTO usuarioDescricaoPutRequestDTO;
+        UsuarioApelidoDescricaoPutRequestDTO usuarioApelidoDescricaoPutRequestDTO;
+        UsuarioEmojiPatchRequestDTO usuarioEmojiPatchRequestDTO;
         UsuarioValidarDTO usuarioValidarDTO;
         Usuario usuario;
 
@@ -86,11 +87,17 @@ public class UsuarioV1ControllerTests {
                     .codigoAcesso(123456L)
                     .build();
 
-            usuarioDescricaoPutRequestDTO = UsuarioApelidoDescricaoPutRequestDTO.builder()
+            usuarioApelidoDescricaoPutRequestDTO = UsuarioApelidoDescricaoPutRequestDTO.builder()
                     .codigoAcesso(123456L)
                     .descricao("Nova descricao")
                     .apelido("Levi")
                     .build();
+
+            usuarioEmojiPatchRequestDTO = UsuarioEmojiPatchRequestDTO.builder()
+                    .emoji("ok")
+                    .codigoAcesso(usuario.getCodigoAcesso())
+                    .build();
+
             usuario = usuarioRepository.save(usuario);
         }
 
@@ -267,25 +274,25 @@ public class UsuarioV1ControllerTests {
 
             // Act
             driver.perform(put(URI_USUARIOS + "/alterar-apelido-descricao/usuario?id=" + usuario.getId())
-                            .content(objectMapper.writeValueAsString(usuarioDescricaoPutRequestDTO))
+                            .content(objectMapper.writeValueAsString(usuarioApelidoDescricaoPutRequestDTO))
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
 
             // Assert
-            assertEquals(usuarioDescricaoPutRequestDTO.getDescricao(), usuarioRepository.findAll().stream().findFirst().get().getDescricao());
+            assertEquals(usuarioApelidoDescricaoPutRequestDTO.getDescricao(), usuarioRepository.findAll().stream().findFirst().get().getDescricao());
         }
 
         @Test
         @DisplayName("QuandoAlteramosOApeldioDoUsuarioPorApelidoVazio")
         void quandoAlteramosOApelidoDoUsuarioPorApelidoVazio() throws Exception {
             // Arrange
-            usuarioDescricaoPutRequestDTO.setApelido("");
+            usuarioApelidoDescricaoPutRequestDTO.setApelido("");
 
             // Act
             String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-apelido-descricao/usuario?id=" + usuario.getId())
-                            .content(objectMapper.writeValueAsString(usuarioDescricaoPutRequestDTO))
+                            .content(objectMapper.writeValueAsString(usuarioApelidoDescricaoPutRequestDTO))
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
@@ -302,11 +309,11 @@ public class UsuarioV1ControllerTests {
         @DisplayName("QuandoAlteramosOApelidoDoUsuarioPorApelidoNula")
         void quandoAlteramosOApelidoDoUsuarioPorApelidoNulo() throws Exception {
             // Arrange
-            usuarioDescricaoPutRequestDTO.setApelido(null);
+            usuarioApelidoDescricaoPutRequestDTO.setApelido(null);
 
             // Act
             String responseJSONString = driver.perform(put(URI_USUARIOS + "/alterar-apelido-descricao/usuario?id=" + usuario.getId())
-                            .content(objectMapper.writeValueAsString(usuarioDescricaoPutRequestDTO))
+                            .content(objectMapper.writeValueAsString(usuarioApelidoDescricaoPutRequestDTO))
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
@@ -410,6 +417,25 @@ public class UsuarioV1ControllerTests {
 
             // Assert
             assertEquals(usuario.getApelido(), usuarioPerfilDTO.getApelido());
+        }
+
+        @Test
+        @DisplayName("Quando alteramos o emoji do usuário.")
+        void quandoAlteramosOEmojiDoUsuario() throws Exception {
+            // Arrange
+            // Nenhuma necessidade além do setup
+
+            // Act
+            String responseJSONString = driver.perform(put(URI_USUARIOS + "/usuario/" + usuario.getId() + "/emoji")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(usuarioEmojiPatchRequestDTO))
+                    )
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn().getResponse().getContentAsString();
+
+            // Assert
+            assertEquals(usuarioEmojiPatchRequestDTO.getEmoji(), responseJSONString);
         }
     }
 }

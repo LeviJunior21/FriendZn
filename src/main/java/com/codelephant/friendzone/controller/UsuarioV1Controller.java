@@ -1,5 +1,6 @@
 package com.codelephant.friendzone.controller;
 
+import com.codelephant.friendzone.dto.usuario.UsuarioEmojiPatchRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioApelidoDescricaoPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioPostPutRequestDTO;
 import com.codelephant.friendzone.dto.usuario.UsuarioValidarDTO;
@@ -29,13 +30,15 @@ public class UsuarioV1Controller {
     @Autowired
     UsuarioValidarInformacoesService usuarioValidarInformacoesService;
     @Autowired
-    UsuarioAlterarApelidoDescricaoService usuarioAlterarDescricaoService;
+    UsuarioAlterarApelidoDescricaoService usuarioAlterarApelidoDescricaoService;
     @Autowired
     UsuarioGetByIdGitHubService usuarioGetByIdGitHubService;
     @Autowired
     UsuarioDeletarService usuarioDeletarService;
     @Autowired
     UsuarioPerfilService usuarioPerfilService;
+    @Autowired
+    UsuarioAlterarEmojiService usuarioAlterarEmojiService;
 
     @PostMapping()
     public ResponseEntity<?> salvarUsuario(
@@ -83,7 +86,7 @@ public class UsuarioV1Controller {
             @RequestParam Long id,
             @RequestBody @Valid UsuarioApelidoDescricaoPutRequestDTO usuarioDescricaoPutRequestDTO
     ) {
-      usuarioAlterarDescricaoService.alterarDescricao(usuarioDescricaoPutRequestDTO, id);
+      usuarioAlterarApelidoDescricaoService.alterarDescricao(usuarioDescricaoPutRequestDTO, id);
       return ResponseEntity
               .status(HttpStatus.OK)
               .body("");
@@ -133,5 +136,15 @@ public class UsuarioV1Controller {
        return ResponseEntity
                .status(HttpStatus.OK)
                .body(usuarioPerfilService.buscar(id));
+    }
+
+    @PutMapping("/usuario/{id}/emoji")
+    public ResponseEntity<?> setEmoji(
+            @Valid @RequestBody UsuarioEmojiPatchRequestDTO usuarioEmojiPatchRequestDTO,
+            @PathVariable Long id
+            ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usuarioAlterarEmojiService.alterar(usuarioEmojiPatchRequestDTO, id));
     }
 }

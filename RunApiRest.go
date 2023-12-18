@@ -56,7 +56,7 @@ func main() {
 	fmt.Println("Criando o primeiro usuário!")
 	postPut(usuarios, jsonUserData)
 
-	jsonUserData2 := []byte(`{"apelido": "AnaClara","email": "anaclara@gmail.com","codigoAcesso": 12345, "loginType": "GitHub", "idade": 22, "sexo": "FEMININO"}`)
+	jsonUserData2 := []byte(`{"apelido": "Dijkstra","email": "anaclara@gmail.com","codigoAcesso": 12345, "loginType": "GitHub", "idade": 22, "sexo": "FEMININO"}`)
         fmt.Println("Criando o segundo usuário!")
         postPut(usuarios, jsonUserData2)
 
@@ -66,7 +66,7 @@ func main() {
 
 	fmt.Println("\nCriando uma publicação para o primeiro usuário criado!")
 
-	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=1"
+	criarPublicacoes :=  "http://localhost:8080/v1/publicacoes/publicacao?id=2"
 	jsonPostData := []byte(`{"publicacao": "Bom dia!","date": "2023-10-24T12:00:00Z","codigoAcesso": 12345, "categoria": "amizade"}`)
 	postPut(criarPublicacoes, jsonPostData)
 
@@ -78,7 +78,7 @@ func main() {
 	fmt.Println("Criando um comentário para a publicação criada.")
 
 	criarComentario := "http://localhost:8080/v1/comentarios/1/usuario?idUsuario=1"
-	jsonPostComentario := []byte(`{"comentario": "Bom dia, amiga!","codigoAcesso": 12345, "idUsuario": 2, "timestamp": "2023-10-24T12:00:00Z"}`)
+	jsonPostComentario := []byte(`{"comentario": "Bom dia, amigo!","codigoAcesso": 12345, "idUsuario": 1, "timestamp": "2023-10-24T12:00:00Z"}`)
         postPut(criarComentario, jsonPostComentario)
 
 	gostarComentario := "http://localhost:8080/v1/comentarios/gostar/publicacao/1/comentario?id=1"
@@ -101,5 +101,8 @@ func main() {
 	fmt.Println("\nRecuperando publicacões seguidas do usuário criado:")
         responseSeguindoUsuario2 := get(publicacoes + "/seguindo/1")
         fmt.Println("Resposta:", responseSeguindoUsuario2)
+
+	avatar := get("159.203.144.215:80/avatar/f025030437010q101000000000.png")
+        fmt.Println(avatar)
 }
 
