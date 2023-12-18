@@ -20,8 +20,10 @@ RUN wget https://services.gradle.org/distributions/gradle-8.3-bin.zip -P /tmp &&
 ENV GRADLE_HOME=/opt/gradle/gradle-8.3
 ENV PATH=${GRADLE_HOME}/bin:${PATH}
 
+RUN chmod +x gradlew
+
 # Compilação do projeto com o Gradle
-RUN ./gradle clean build
+RUN gradle clean build
 
 FROM openjdk:17-jdk-slim
 
