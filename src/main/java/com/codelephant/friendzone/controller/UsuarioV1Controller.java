@@ -138,9 +138,9 @@ public class UsuarioV1Controller {
                .body(usuarioPerfilService.buscar(id));
     }
 
-    @PutMapping("/usuario/{id}/emoji")
+    @PatchMapping("/usuario/{id}/emoji")
     public ResponseEntity<?> setEmoji(
-            @Valid @RequestBody UsuarioEmojiPatchRequestDTO usuarioEmojiPatchRequestDTO,
+            @RequestBody @Valid UsuarioEmojiPatchRequestDTO usuarioEmojiPatchRequestDTO,
             @PathVariable Long id
             ) {
         return ResponseEntity

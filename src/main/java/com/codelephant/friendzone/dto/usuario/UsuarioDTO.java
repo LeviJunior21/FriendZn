@@ -32,4 +32,7 @@ public class UsuarioDTO {
 
     @JsonProperty("descricao")
     private String descricao;
+
+    @JsonProperty("emoji")
+    private String emoji;
 }

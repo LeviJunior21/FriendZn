@@ -34,4 +34,7 @@ public class UsuarioPerfilDTO {
 
     @JsonProperty("date")
     private Date date = new Date();
+
+    @JsonProperty("emoji")
+    private String emoji;
 }

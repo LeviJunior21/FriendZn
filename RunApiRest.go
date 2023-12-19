@@ -48,7 +48,8 @@ func postPut(url string, jsonData []byte) {
 }
 
 func main() {
-	usuarios := "http://localhost:8080/v1/usuarios"
+	//usuarios := "http://localhost:8080/v1/usuarios"
+	usuarios := "https://friendzone-qhwk.onrender.com/v1/usuarios"
 	publicacoes := "http://localhost:8080/v1/publicacoes"
 	comentarios := "http://localhost:8080/v1/comentarios"
 

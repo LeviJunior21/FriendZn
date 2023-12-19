@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -426,7 +427,7 @@ public class UsuarioV1ControllerTests {
             // Nenhuma necessidade além do setup
 
             // Act
-            String responseJSONString = driver.perform(put(URI_USUARIOS + "/usuario/" + usuario.getId() + "/emoji")
+            String responseJSONString = driver.perform(patch(URI_USUARIOS + "/usuario/" + usuario.getId() + "/emoji")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(usuarioEmojiPatchRequestDTO))
                     )

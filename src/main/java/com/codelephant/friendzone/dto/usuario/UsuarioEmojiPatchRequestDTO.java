@@ -13,7 +13,6 @@ import lombok.*;
 @NoArgsConstructor
 public class UsuarioEmojiPatchRequestDTO {
     @JsonProperty("emoji")
-    @NotBlank(message = "Emoji invalido")
     private String emoji;
 
     @JsonProperty("codigoAcesso")
