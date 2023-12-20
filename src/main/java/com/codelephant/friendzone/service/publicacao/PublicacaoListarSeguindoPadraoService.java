@@ -20,14 +20,11 @@ public class PublicacaoListarSeguindoPadraoService implements PublicacaoListarSe
     @Autowired
     ModelMapper modelMapper;
     @Autowired
-    PublicacaoRepository publicacaoRepository;
-    @Autowired
     UsuarioRepository usuarioRepository;
 
     @Override
     public List<PublicacaoDTO> listar(Long idUsuario) {
         Usuario usuario = usuarioRepository.findById(idUsuario).orElseThrow(UsuarioNaoExisteException::new);
-        List<Publicacao> publicacoesInteressadas = publicacaoRepository.findAll().stream().filter(publicacao -> publicacao.getInteressados().contains(usuario)).collect(Collectors.toList());
-        return publicacoesInteressadas.stream().map(publicacao -> modelMapper.map(publicacao, PublicacaoDTO.class)).collect(Collectors.toList());
+        return usuario.getPublicacoesSeguidas().stream().map(publicacao -> modelMapper.map(publicacao, PublicacaoDTO.class)).collect(Collectors.toList());
     }
 }

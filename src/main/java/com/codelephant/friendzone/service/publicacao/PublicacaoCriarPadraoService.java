@@ -36,6 +36,7 @@ public class PublicacaoCriarPadraoService implements PublicacaoCriarService {
         publicacao.setUsuario(usuario);
         publicacao = publicacaoRepository.save(publicacao);
         usuario.getPublicacoes().add(publicacao);
+        usuario.getPublicacoesSeguidas().add(publicacao);
         usuarioRepository.save(usuario);
 
         PublicacaoDTO publicacaoDTO = modelMapper.map(publicacao, PublicacaoDTO.class);

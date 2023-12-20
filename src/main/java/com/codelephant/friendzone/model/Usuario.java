@@ -59,12 +59,10 @@ public class Usuario {
     @Builder.Default
     private Set<Comentario> naoGostaram = new HashSet<>();
 
-    @JsonProperty("publicacao")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
-    @JoinColumn(name = "publicacao_id", referencedColumnName = "id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Publicacao publicacao;
+    @JsonProperty("publicacoesSeguidas")
+    @ManyToMany()
+    @Builder.Default
+    private Set<Publicacao> publicacoesSeguidas = new HashSet<>();
 
     @JsonProperty("descricao")
     @Builder.Default

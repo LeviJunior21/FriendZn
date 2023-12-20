@@ -49,7 +49,7 @@ public class Publicacao {
     private Categoria categoria;
 
     @JsonProperty("interessados")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "publicacao", fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "publicacoesSeguidas")
     @JsonManagedReference
     @JsonIgnore
     @Builder.Default

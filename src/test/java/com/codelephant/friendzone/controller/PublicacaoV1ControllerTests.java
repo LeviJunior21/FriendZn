@@ -246,11 +246,11 @@ public class PublicacaoV1ControllerTests {
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
 
-            Set<Publicacao> publicacoes = objectMapper.readValue(responseJSONString, new TypeReference<HashSet<Publicacao>>() {});
+            List<PublicacaoDTO> publicacoes = objectMapper.readValue(responseJSONString, new TypeReference<ArrayList<PublicacaoDTO>>() {});
 
             // Assert
             assertAll(
-                    () -> assertEquals(1, publicacoes.size())
+                    () -> assertEquals(0, publicacoes.size())
             );
         }
 

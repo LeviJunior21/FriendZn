@@ -36,6 +36,9 @@ public class ComentarioCriarPadraoService implements ComentarioCriarService {
         publicacao.getInteressados().add(usuario);
         publicacaoRepository.save(publicacao);
 
+        usuario.getPublicacoesSeguidas().add(publicacao);
+        usuarioRepository.save(usuario);
+
         return ComentarioDTO.builder()
                 .id(comentario.getId())
                 .comentario(comentarioPostPutRequestDTO.getComentario())
