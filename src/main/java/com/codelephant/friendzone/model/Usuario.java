@@ -60,7 +60,7 @@ public class Usuario {
     private Set<Comentario> naoGostaram = new HashSet<>();
 
     @JsonProperty("publicacoesSeguidas")
-    @ManyToMany()
+    @ManyToMany(cascade = CascadeType.ALL)
     @Builder.Default
     private Set<Publicacao> publicacoesSeguidas = new HashSet<>();
 
@@ -80,4 +80,17 @@ public class Usuario {
     @JsonProperty("emoji")
     @Builder.Default
     private String emoji = "";
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Publicacao that = (Publicacao) o;
+        return Objects.equals(id, that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

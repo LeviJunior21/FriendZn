@@ -116,7 +116,7 @@ public class PublicacaoV1ControllerTests {
                     .content(objectMapper.writeValueAsString(publicacaoPostPutRequestDTO)))
                     .andDo(print())
                     .andExpect(status().isCreated())
-                    .andReturn().getResponse().getContentAsString(); 
+                    .andReturn().getResponse().getContentAsString();
 
             PublicacaoDTO publicacaoDTO = objectMapper.readValue(responseJSONString, PublicacaoDTO.class);
 
