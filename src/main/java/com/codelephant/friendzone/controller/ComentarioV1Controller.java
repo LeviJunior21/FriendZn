@@ -3,6 +3,7 @@ package com.codelephant.friendzone.controller;
 import com.codelephant.friendzone.dto.comentario.ComentarioGostarOuNaoPostRequestDTO;
 import com.codelephant.friendzone.dto.comentario.ComentarioPostPutRequestDTO;
 import com.codelephant.friendzone.service.comentario.*;
+import jakarta.validation.Constraint;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
